@@ -28,9 +28,8 @@ const loginSchema = z.object({
 type LoginFormValues = z.infer<typeof loginSchema>;
 
 export default function LoginPage() {
-    const router = useRouter();
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -42,7 +41,7 @@ export default function LoginPage() {
 
   async function onSubmit(data: LoginFormValues) {
     setLoading(true);
-   const res = await fetch('/api/auth/login', {
+    const res = await fetch('/api/auth/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email: data.email, password: data.password }),
@@ -51,8 +50,10 @@ export default function LoginPage() {
     setLoading(false);
 
     if (!res.ok) {
+
       const data = await res.json().catch(() => ({}));
-      setError(data.error ?? 'Erro ao fazer login.');
+     
+      
       toast.add({
         description: data.error ?? 'Erro ao fazer login.',
         type: 'error',
@@ -144,7 +145,7 @@ export default function LoginPage() {
 
         <p className="mt-8 text-sm text-zinc-400">
           Não tem uma conta?{' '}
-          <Link href="/cadastro" className="text-indigo-400 hover:text-indigo-300 hover:underline font-medium cursor-pointer">
+          <Link href="/register" className="text-indigo-400 hover:text-indigo-300 hover:underline font-medium cursor-pointer">
             Cadastrar
           </Link>
         </p>
