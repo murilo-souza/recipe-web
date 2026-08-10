@@ -53,9 +53,9 @@ export default function LoginPage() {
       const data = await res.json().catch(() => ({}));
       setError(data.error ?? 'Erro ao fazer login.');
       toast.add({
-        title: 'Erro',
         description: data.error ?? 'Erro ao fazer login.',
-        
+        type: 'error',
+        priority: 'high',
       });
       return;
     }
