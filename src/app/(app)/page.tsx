@@ -14,7 +14,6 @@ export default async function HomePage() {
         <div className="flex items-center gap-4">
           <div className="h-14 w-14 rounded-full bg-zinc-700 flex items-center justify-center" >
             <User className="h-8 w-8 text-zinc-400 m-auto" />
-
           </div>
           <h2 className="text-white text-2xl font-semibold">Olá, {session?.userName}</h2>
         </div>

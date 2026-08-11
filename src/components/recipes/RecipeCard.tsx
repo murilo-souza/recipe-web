@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import type { RecipeSummaryResponse } from '@/lib/types/api';
+import { CookingPot } from 'lucide-react';
 
 function timeAgo(dateString: string): string {
   const diffMs = Date.now() - new Date(dateString).getTime();
@@ -25,7 +26,7 @@ export function RecipeCard({ recipe }: { recipe: RecipeSummaryResponse }) {
           <img src={recipe.image} alt={recipe.title} className="h-full w-full object-cover" />
         ) : (
           <div className="h-full w-full flex items-center justify-center text-zinc-400 text-sm">
-            Sem imagem
+            <CookingPot className="h-10 w-10 mr-2" />
           </div>
         )}
       </div>
