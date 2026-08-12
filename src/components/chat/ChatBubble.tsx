@@ -1,5 +1,7 @@
 import type { ChatMessageResponse } from '@/lib/types/api';
 import { Bot, User } from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 export function ChatBubble({ message }: { message: ChatMessageResponse }) {
   const isUser = message.role === 'User';
@@ -30,7 +32,9 @@ export function ChatBubble({ message }: { message: ChatMessageResponse }) {
               : 'rounded-bl-md border border-zinc-600/30 bg-zinc-700/60 text-zinc-200'
           }`}
         >
-          <p className="whitespace-pre-wrap">{message.content}</p>
+          <div>
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>{message.content}</ReactMarkdown>
+          </div>
         </div>
       </div>
     </div>
