@@ -142,33 +142,42 @@ export function RecipeForm({ categories }: RecipeFormProps) {
             <Controller
               name="categoryId"
               control={control}
-              render={({ field }) => (
-                <Select
-                  value={field.value != null ? String(field.value) : ''}
-                  onValueChange={(val) => field.onChange(val)}
-                >
-                  <SelectTrigger
-                    id="categoryId"
-                    className="w-full h-12 rounded-xl bg-zinc-800/60 border border-zinc-700/50 text-white 
-                               hover:border-zinc-600/50 hover:bg-zinc-800/80
-                               data-placeholder:text-zinc-500 [&_svg]:text-zinc-400
-                               focus-visible:ring-2 focus-visible:ring-indigo-500/50 focus-visible:border-indigo-500/50 
-                               transition-all duration-300"
-                    aria-required="true"
-                    aria-invalid={!!errors.categoryId}
-                    aria-describedby={errors.categoryId ? 'categoryId-error' : undefined}
+              render={({ field }) => {
+                // Build items map so Select.Value renders the label (name) instead of the raw value (id)
+                const itemsMap: Record<string, string> = {};
+                for (const c of categories) {
+                  itemsMap[String(c.id)] = c.name;
+                }
+
+                return (
+                  <Select
+                    value={field.value != null ? String(field.value) : ''}
+                    onValueChange={(val) => field.onChange(val)}
+                    items={itemsMap}
                   >
-                    <SelectValue placeholder="Selecione uma categoria" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {categories.map((c) => (
-                      <SelectItem key={c.id} value={String(c.id)}>
-                        {c.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              )}
+                    <SelectTrigger
+                      id="categoryId"
+                      className="w-full h-12 rounded-xl bg-zinc-800/60 border border-zinc-700/50 text-white 
+                                 hover:border-zinc-600/50 hover:bg-zinc-800/80
+                                 data-placeholder:text-zinc-500 [&_svg]:text-zinc-400
+                                 focus-visible:ring-2 focus-visible:ring-indigo-500/50 focus-visible:border-indigo-500/50 
+                                 transition-all duration-300"
+                      aria-required="true"
+                      aria-invalid={!!errors.categoryId}
+                      aria-describedby={errors.categoryId ? 'categoryId-error' : undefined}
+                    >
+                      <SelectValue placeholder="Selecione uma categoria" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {categories.map((c) => (
+                        <SelectItem key={c.id} value={String(c.id)}>
+                          {c.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                );
+              }}
             />
             {errors.categoryId && (
               <p id="categoryId-error" role="alert" className="text-red-400 text-xs flex items-center gap-1">
