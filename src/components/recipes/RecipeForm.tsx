@@ -21,11 +21,15 @@ import type { CategoryResponse } from '@/lib/types/api';
 
 interface RecipeFormProps {
   categories: CategoryResponse[];
+  recipeId?: number; // presente = modo edição
+  defaultValues?: RecipeFormInput;
 }
 
-export function RecipeForm({ categories }: RecipeFormProps) {
+export function RecipeForm({ categories, recipeId, defaultValues }: RecipeFormProps) {
   const router = useRouter();
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const isEditing = Boolean(recipeId);
+
 
   const {
     register,
@@ -34,7 +38,7 @@ export function RecipeForm({ categories }: RecipeFormProps) {
     formState: { errors, isSubmitting },
   } = useForm<RecipeFormInput, unknown, RecipeFormValues>({
     resolver: zodResolver(recipeFormSchema),
-    defaultValues: {
+    defaultValues: defaultValues ?? {
       title: '',
       description: '',
       categoryId: undefined,
@@ -47,8 +51,11 @@ export function RecipeForm({ categories }: RecipeFormProps) {
   async function onSubmit(values: RecipeFormValues) {
     setSubmitError(null);
 
-    const res = await fetch('/api/recipes', {
-      method: 'POST',
+const url = isEditing ? `/api/recipes/${recipeId}` : '/api/recipes';
+    const method = isEditing ? 'PUT' : 'POST';
+
+    const res = await fetch(url, {
+      method,
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(values),
     });
@@ -59,7 +66,7 @@ export function RecipeForm({ categories }: RecipeFormProps) {
       return;
     }
 
-    router.push('/');
+    router.push(isEditing ? `/recipes/${recipeId}` : '/');
     router.refresh();
   }
 
@@ -348,7 +355,7 @@ export function RecipeForm({ categories }: RecipeFormProps) {
             </>
           ) : (
             <>
-              Salvar receita
+              {isEditing ? 'Salvar alterações' : 'Salvar receita'}
               <ArrowRight className="w-4 h-4" />
             </>
           )}
