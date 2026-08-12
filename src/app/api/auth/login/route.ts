@@ -7,7 +7,6 @@ function extractRefreshToken(setCookieHeader: string | null): string | null {
   return match ? decodeURIComponent(match[1]) : null;
 }
 
-
 export async function POST(req: Request) {
   const body: LoginRequest = await req.json();
 
@@ -19,7 +18,10 @@ export async function POST(req: Request) {
 
   if (!apiRes.ok) {
     const errorText = await apiRes.text();
-    return Response.json({ error: errorText || 'Credenciais inválidas' }, { status: apiRes.status });
+    return Response.json(
+      { error: errorText || 'Credenciais inválidas' },
+      { status: apiRes.status },
+    );
   }
 
   const data: AuthResponse = await apiRes.json();

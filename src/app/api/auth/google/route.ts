@@ -18,7 +18,10 @@ export async function POST(req: Request) {
 
   if (!apiRes.ok) {
     const errorText = await apiRes.text();
-    return Response.json({ error: errorText || 'Falha na autenticação.' }, { status: apiRes.status });
+    return Response.json(
+      { error: errorText || 'Falha na autenticação.' },
+      { status: apiRes.status },
+    );
   }
 
   const data: AuthResponse = await apiRes.json();

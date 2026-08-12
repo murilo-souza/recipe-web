@@ -5,7 +5,16 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { CldUploadWidget } from 'next-cloudinary';
-import { ImagePlus, Upload, ChefHat, ListOrdered, Loader2, ArrowRight, AlertCircle, Camera } from 'lucide-react';
+import {
+  ImagePlus,
+  Upload,
+  ChefHat,
+  ListOrdered,
+  Loader2,
+  ArrowRight,
+  AlertCircle,
+  Camera,
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -30,7 +39,6 @@ export function RecipeForm({ categories, recipeId, defaultValues }: RecipeFormPr
   const [submitError, setSubmitError] = useState<string | null>(null);
   const isEditing = Boolean(recipeId);
 
-
   const {
     register,
     control,
@@ -51,7 +59,7 @@ export function RecipeForm({ categories, recipeId, defaultValues }: RecipeFormPr
   async function onSubmit(values: RecipeFormValues) {
     setSubmitError(null);
 
-const url = isEditing ? `/api/recipes/${recipeId}` : '/api/recipes';
+    const url = isEditing ? `/api/recipes/${recipeId}` : '/api/recipes';
     const method = isEditing ? 'PUT' : 'POST';
 
     const res = await fetch(url, {
@@ -77,15 +85,17 @@ const url = isEditing ? `/api/recipes/${recipeId}` : '/api/recipes';
       aria-label="Formulário de receita"
       className="space-y-10"
     >
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-14">
+      <div className="grid grid-cols-1 gap-10 lg:grid-cols-2 lg:gap-14">
         {/* ─── Left column — Basic info ─── */}
-        <fieldset className="space-y-6 min-w-0">
-          <legend className="w-full pb-3 mb-1 flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-indigo-500/15 flex items-center justify-center shrink-0">
-              <ChefHat className="w-4 h-4 text-indigo-400" />
+        <fieldset className="min-w-0 space-y-6">
+          <legend className="mb-1 flex w-full items-center gap-3 pb-3">
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-indigo-500/15">
+              <ChefHat className="h-4 w-4 text-indigo-400" />
             </div>
             <div>
-              <span className="text-base font-semibold text-white block leading-tight">Informações básicas</span>
+              <span className="block text-base leading-tight font-semibold text-white">
+                Informações básicas
+              </span>
               <span className="text-xs text-zinc-500">Dados gerais da receita</span>
             </div>
           </legend>
@@ -95,22 +105,31 @@ const url = isEditing ? `/api/recipes/${recipeId}` : '/api/recipes';
 
           {/* Title */}
           <div className="space-y-2">
-            <label htmlFor="title" className="text-sm font-medium text-zinc-300 flex items-center gap-1">
-              Título <span aria-hidden="true" className="text-indigo-400">*</span>
+            <label
+              htmlFor="title"
+              className="flex items-center gap-1 text-sm font-medium text-zinc-300"
+            >
+              Título{' '}
+              <span aria-hidden="true" className="text-indigo-400">
+                *
+              </span>
             </label>
             <Input
               id="title"
               {...register('title')}
               placeholder="Ex: Bolo de chocolate da vovó"
-              className="bg-zinc-800/60 border border-zinc-700/50 text-white placeholder:text-zinc-500 h-12 rounded-xl
-                         focus-visible:ring-2 focus-visible:ring-indigo-500/50 focus-visible:border-indigo-500/50 transition-all duration-300"
+              className="h-12 rounded-xl border border-zinc-700/50 bg-zinc-800/60 text-white transition-all duration-300 placeholder:text-zinc-500 focus-visible:border-indigo-500/50 focus-visible:ring-2 focus-visible:ring-indigo-500/50"
               aria-required="true"
               aria-invalid={!!errors.title}
               aria-describedby={errors.title ? 'title-error' : undefined}
             />
             {errors.title && (
-              <p id="title-error" role="alert" className="text-red-400 text-xs flex items-center gap-1">
-                <AlertCircle className="w-3 h-3" />
+              <p
+                id="title-error"
+                role="alert"
+                className="flex items-center gap-1 text-xs text-red-400"
+              >
+                <AlertCircle className="h-3 w-3" />
                 {errors.title.message}
               </p>
             )}
@@ -118,24 +137,32 @@ const url = isEditing ? `/api/recipes/${recipeId}` : '/api/recipes';
 
           {/* Description */}
           <div className="space-y-2">
-            <label htmlFor="description" className="text-sm font-medium text-zinc-300 flex items-center gap-1">
-              Descrição <span aria-hidden="true" className="text-indigo-400">*</span>
+            <label
+              htmlFor="description"
+              className="flex items-center gap-1 text-sm font-medium text-zinc-300"
+            >
+              Descrição{' '}
+              <span aria-hidden="true" className="text-indigo-400">
+                *
+              </span>
             </label>
             <textarea
               id="description"
               {...register('description')}
               placeholder="Conte um pouco sobre esta receita..."
               rows={4}
-              className="w-full rounded-xl border border-zinc-700/50 bg-zinc-800/60 px-4 py-3 text-sm text-white placeholder:text-zinc-500 
-                         resize-none outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/50 focus-visible:border-indigo-500/50 
-                         transition-all duration-300"
+              className="w-full resize-none rounded-xl border border-zinc-700/50 bg-zinc-800/60 px-4 py-3 text-sm text-white transition-all duration-300 outline-none placeholder:text-zinc-500 focus-visible:border-indigo-500/50 focus-visible:ring-2 focus-visible:ring-indigo-500/50"
               aria-required="true"
               aria-invalid={!!errors.description}
               aria-describedby={errors.description ? 'description-error' : undefined}
             />
             {errors.description && (
-              <p id="description-error" role="alert" className="text-red-400 text-xs flex items-center gap-1">
-                <AlertCircle className="w-3 h-3" />
+              <p
+                id="description-error"
+                role="alert"
+                className="flex items-center gap-1 text-xs text-red-400"
+              >
+                <AlertCircle className="h-3 w-3" />
                 {errors.description.message}
               </p>
             )}
@@ -143,8 +170,14 @@ const url = isEditing ? `/api/recipes/${recipeId}` : '/api/recipes';
 
           {/* Category */}
           <div className="space-y-2">
-            <label htmlFor="categoryId" className="text-sm font-medium text-zinc-300 flex items-center gap-1">
-              Categoria <span aria-hidden="true" className="text-indigo-400">*</span>
+            <label
+              htmlFor="categoryId"
+              className="flex items-center gap-1 text-sm font-medium text-zinc-300"
+            >
+              Categoria{' '}
+              <span aria-hidden="true" className="text-indigo-400">
+                *
+              </span>
             </label>
             <Controller
               name="categoryId"
@@ -164,11 +197,7 @@ const url = isEditing ? `/api/recipes/${recipeId}` : '/api/recipes';
                   >
                     <SelectTrigger
                       id="categoryId"
-                      className="w-full h-12 rounded-xl bg-zinc-800/60 border border-zinc-700/50 text-white 
-                                 hover:border-zinc-600/50 hover:bg-zinc-800/80
-                                 data-placeholder:text-zinc-500 [&_svg]:text-zinc-400
-                                 focus-visible:ring-2 focus-visible:ring-indigo-500/50 focus-visible:border-indigo-500/50 
-                                 transition-all duration-300"
+                      className="h-12 w-full rounded-xl border border-zinc-700/50 bg-zinc-800/60 text-white transition-all duration-300 hover:border-zinc-600/50 hover:bg-zinc-800/80 focus-visible:border-indigo-500/50 focus-visible:ring-2 focus-visible:ring-indigo-500/50 data-placeholder:text-zinc-500 [&_svg]:text-zinc-400"
                       aria-required="true"
                       aria-invalid={!!errors.categoryId}
                       aria-describedby={errors.categoryId ? 'categoryId-error' : undefined}
@@ -187,8 +216,12 @@ const url = isEditing ? `/api/recipes/${recipeId}` : '/api/recipes';
               }}
             />
             {errors.categoryId && (
-              <p id="categoryId-error" role="alert" className="text-red-400 text-xs flex items-center gap-1">
-                <AlertCircle className="w-3 h-3" />
+              <p
+                id="categoryId-error"
+                role="alert"
+                className="flex items-center gap-1 text-xs text-red-400"
+              >
+                <AlertCircle className="h-3 w-3" />
                 {errors.categoryId.message}
               </p>
             )}
@@ -196,8 +229,11 @@ const url = isEditing ? `/api/recipes/${recipeId}` : '/api/recipes';
 
           {/* Image upload */}
           <div className="space-y-2">
-            <label className="text-sm font-medium text-zinc-300 flex items-center gap-2" id="image-label">
-              <Camera className="w-3.5 h-3.5 text-zinc-400" />
+            <label
+              className="flex items-center gap-2 text-sm font-medium text-zinc-300"
+              id="image-label"
+            >
+              <Camera className="h-3.5 w-3.5 text-zinc-400" />
               Imagem
             </label>
             <Controller
@@ -214,24 +250,22 @@ const url = isEditing ? `/api/recipes/${recipeId}` : '/api/recipes';
                 >
                   {({ open }) =>
                     field.value ? (
-                      <div className="relative rounded-2xl overflow-hidden group border border-zinc-700/50">
+                      <div className="group relative overflow-hidden rounded-2xl border border-zinc-700/50">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
                           src={field.value}
                           alt="Prévia da receita"
                           className="h-48 w-full object-cover transition-transform duration-500 group-hover:scale-105"
                         />
-                        <div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/20 to-transparent 
-                                        flex items-end justify-center pb-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <div className="absolute inset-0 flex items-end justify-center bg-linear-to-t from-black/70 via-black/20 to-transparent pb-4 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                           <Button
                             type="button"
                             variant="outline"
                             size="sm"
                             onClick={() => open()}
-                            className="border-white/30 text-white bg-white/10 backdrop-blur-sm hover:bg-white/20 hover:text-white 
-                                       rounded-xl px-4 py-2 h-auto text-sm cursor-pointer"
+                            className="h-auto cursor-pointer rounded-xl border-white/30 bg-white/10 px-4 py-2 text-sm text-white backdrop-blur-sm hover:bg-white/20 hover:text-white"
                           >
-                            <Upload className="w-3.5 h-3.5 mr-1.5" />
+                            <Upload className="mr-1.5 h-3.5 w-3.5" />
                             Trocar imagem
                           </Button>
                         </div>
@@ -241,19 +275,19 @@ const url = isEditing ? `/api/recipes/${recipeId}` : '/api/recipes';
                         type="button"
                         onClick={() => open()}
                         aria-labelledby="image-label"
-                        className="w-full h-40 rounded-2xl border-2 border-dashed border-zinc-700/50 bg-zinc-800/30 
-                                   flex flex-col items-center justify-center gap-3 
-                                   text-zinc-500 hover:border-indigo-500/40 hover:text-zinc-300 hover:bg-zinc-800/50
-                                   transition-all duration-300 cursor-pointer group
-                                   focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/50"
+                        className="group flex h-40 w-full cursor-pointer flex-col items-center justify-center gap-3 rounded-2xl border-2 border-dashed border-zinc-700/50 bg-zinc-800/30 text-zinc-500 transition-all duration-300 hover:border-indigo-500/40 hover:bg-zinc-800/50 hover:text-zinc-300 focus-visible:ring-2 focus-visible:ring-indigo-500/50 focus-visible:outline-none"
                       >
-                        <div className="w-12 h-12 rounded-2xl bg-zinc-700/40 flex items-center justify-center
-                                        group-hover:bg-indigo-500/15 transition-colors duration-300">
-                          <ImagePlus className="w-5 h-5 group-hover:text-indigo-400 transition-colors duration-300" aria-hidden="true" />
+                        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-zinc-700/40 transition-colors duration-300 group-hover:bg-indigo-500/15">
+                          <ImagePlus
+                            className="h-5 w-5 transition-colors duration-300 group-hover:text-indigo-400"
+                            aria-hidden="true"
+                          />
                         </div>
                         <div className="text-center">
-                          <span className="text-sm font-medium block">Clique para enviar</span>
-                          <span className="text-xs text-zinc-600 mt-0.5 block">JPG, PNG ou WebP</span>
+                          <span className="block text-sm font-medium">Clique para enviar</span>
+                          <span className="mt-0.5 block text-xs text-zinc-600">
+                            JPG, PNG ou WebP
+                          </span>
                         </div>
                       </button>
                     )
@@ -265,13 +299,15 @@ const url = isEditing ? `/api/recipes/${recipeId}` : '/api/recipes';
         </fieldset>
 
         {/* ─── Right column — Ingredients & Steps ─── */}
-        <fieldset className="space-y-6 min-w-0">
-          <legend className="w-full pb-3 mb-1 flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-purple-500/15 flex items-center justify-center shrink-0">
-              <ListOrdered className="w-4 h-4 text-purple-400" />
+        <fieldset className="min-w-0 space-y-6">
+          <legend className="mb-1 flex w-full items-center gap-3 pb-3">
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-purple-500/15">
+              <ListOrdered className="h-4 w-4 text-purple-400" />
             </div>
             <div>
-              <span className="text-base font-semibold text-white block leading-tight">Ingredientes e preparo</span>
+              <span className="block text-base leading-tight font-semibold text-white">
+                Ingredientes e preparo
+              </span>
               <span className="text-xs text-zinc-500">Detalhes de como preparar</span>
             </div>
           </legend>
@@ -293,8 +329,8 @@ const url = isEditing ? `/api/recipes/${recipeId}` : '/api/recipes';
               )}
             />
             {errors.ingredients && (
-              <p role="alert" className="text-red-400 text-xs flex items-center gap-1">
-                <AlertCircle className="w-3 h-3" />
+              <p role="alert" className="flex items-center gap-1 text-xs text-red-400">
+                <AlertCircle className="h-3 w-3" />
                 {errors.ingredients.message}
               </p>
             )}
@@ -317,8 +353,8 @@ const url = isEditing ? `/api/recipes/${recipeId}` : '/api/recipes';
               )}
             />
             {errors.prepareSteps && (
-              <p role="alert" className="text-red-400 text-xs flex items-center gap-1">
-                <AlertCircle className="w-3 h-3" />
+              <p role="alert" className="flex items-center gap-1 text-xs text-red-400">
+                <AlertCircle className="h-3 w-3" />
                 {errors.prepareSteps.message}
               </p>
             )}
@@ -328,35 +364,33 @@ const url = isEditing ? `/api/recipes/${recipeId}` : '/api/recipes';
 
       {/* Error banner */}
       {submitError && (
-        <div className="flex items-center gap-3 rounded-xl bg-red-500/10 border border-red-500/20 px-4 py-3 animate-fade-in-up">
-          <AlertCircle className="w-4 h-4 text-red-400 shrink-0" />
-          <p role="alert" className="text-red-400 text-sm">{submitError}</p>
+        <div className="animate-fade-in-up flex items-center gap-3 rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3">
+          <AlertCircle className="h-4 w-4 shrink-0 text-red-400" />
+          <p role="alert" className="text-sm text-red-400">
+            {submitError}
+          </p>
         </div>
       )}
 
       {/* Submit section */}
-      <div className="flex items-center justify-between pt-6 border-t border-zinc-800/60">
-        <p className="text-xs text-zinc-600 hidden sm:block">
+      <div className="flex items-center justify-between border-t border-zinc-800/60 pt-6">
+        <p className="hidden text-xs text-zinc-600 sm:block">
           Campos com <span className="text-indigo-400">*</span> são obrigatórios
         </p>
         <Button
           type="submit"
           disabled={isSubmitting}
-          className="ml-auto h-12 px-8 rounded-xl bg-linear-to-t from-indigo-500 to-purple-600 hover:from-indigo-400 hover:to-purple-500 
-                     text-white text-sm font-semibold transition-all duration-300 cursor-pointer
-                     shadow-lg shadow-indigo-500/20 hover:shadow-indigo-500/35 hover:scale-[1.01] active:scale-[0.99]
-                     disabled:opacity-60 disabled:hover:scale-100 disabled:hover:shadow-indigo-500/20
-                     flex items-center gap-2"
+          className="ml-auto flex h-12 cursor-pointer items-center gap-2 rounded-xl bg-linear-to-t from-indigo-500 to-purple-600 px-8 text-sm font-semibold text-white shadow-lg shadow-indigo-500/20 transition-all duration-300 hover:scale-[1.01] hover:from-indigo-400 hover:to-purple-500 hover:shadow-indigo-500/35 active:scale-[0.99] disabled:opacity-60 disabled:hover:scale-100 disabled:hover:shadow-indigo-500/20"
         >
           {isSubmitting ? (
             <>
-              <Loader2 className="w-4 h-4 animate-spin" />
+              <Loader2 className="h-4 w-4 animate-spin" />
               Salvando...
             </>
           ) : (
             <>
               {isEditing ? 'Salvar alterações' : 'Salvar receita'}
-              <ArrowRight className="w-4 h-4" />
+              <ArrowRight className="h-4 w-4" />
             </>
           )}
         </Button>

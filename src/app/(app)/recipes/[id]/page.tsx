@@ -23,69 +23,70 @@ export default async function RecipeDetailPage({ params }: PageProps) {
   }
 
   return (
-    <div className="bg-zinc-900 relative noise-overlay lg:h-screen lg:overflow-hidden flex flex-col lg:flex-row">
+    <div className="noise-overlay relative flex flex-col bg-zinc-900 lg:h-screen lg:flex-row lg:overflow-hidden">
       {/* Background decorative elements */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute -top-40 -left-40 w-96 h-96 bg-indigo-500/6 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 right-1/3 w-72 h-72 bg-purple-500/4 rounded-full blur-3xl" />
+      <div className="pointer-events-none fixed inset-0 overflow-hidden">
+        <div className="absolute -top-40 -left-40 h-96 w-96 rounded-full bg-indigo-500/6 blur-3xl" />
+        <div className="absolute right-1/3 bottom-1/4 h-72 w-72 rounded-full bg-purple-500/4 blur-3xl" />
       </div>
 
       {/* Left column: recipe details — scrollable */}
-      <div className="flex-1 relative z-10 min-h-screen lg:min-h-0 lg:overflow-y-auto">
-        <div className="max-w-3xl mx-auto px-6 sm:px-10 py-10 space-y-8">
+      <div className="relative z-10 min-h-screen flex-1 lg:min-h-0 lg:overflow-y-auto">
+        <div className="mx-auto max-w-3xl space-y-8 px-6 py-10 sm:px-10">
           {/* Header */}
-          <div className="flex items-center gap-4 animate-fade-in-up">
+          <div className="animate-fade-in-up flex items-center gap-4">
             <Link
               href="/"
               aria-label="Voltar para a home"
-              className="flex items-center justify-center w-10 h-10 rounded-xl bg-zinc-800/60 border border-zinc-700/50 
-                         text-zinc-400 hover:text-white hover:border-indigo-500/40 hover:bg-zinc-800 
-                         transition-all duration-300 group"
+              className="group flex h-10 w-10 items-center justify-center rounded-xl border border-zinc-700/50 bg-zinc-800/60 text-zinc-400 transition-all duration-300 hover:border-indigo-500/40 hover:bg-zinc-800 hover:text-white"
             >
-              <ArrowLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform duration-300" />
+              <ArrowLeft className="h-4 w-4 transition-transform duration-300 group-hover:-translate-x-0.5" />
             </Link>
             <div>
-              <span className="text-xs text-indigo-400 font-medium uppercase tracking-wider">Receita</span>
-              <h1 className="text-2xl sm:text-3xl font-bold text-white leading-tight">{recipe.title}</h1>
+              <span className="text-xs font-medium tracking-wider text-indigo-400 uppercase">
+                Receita
+              </span>
+              <h1 className="text-2xl leading-tight font-bold text-white sm:text-3xl">
+                {recipe.title}
+              </h1>
             </div>
           </div>
 
           {/* Image (if exists) */}
           {recipe.image && (
-            <div className="rounded-2xl overflow-hidden border border-zinc-700/50 animate-fade-in-up delay-100">
+            <div className="animate-fade-in-up overflow-hidden rounded-2xl border border-zinc-700/50 delay-100">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={recipe.image}
                 alt={recipe.title}
-                className="w-full h-64 sm:h-80 object-cover"
+                className="h-64 w-full object-cover sm:h-80"
               />
             </div>
           )}
 
           {/* Description card */}
           <DetailCard
-            icon={<FileText className="w-4 h-4 text-indigo-400" />}
+            icon={<FileText className="h-4 w-4 text-indigo-400" />}
             label="Descrição"
             delay="delay-200"
           >
-            <p className="text-zinc-300 text-sm leading-relaxed">{recipe.description}</p>
+            <p className="text-sm leading-relaxed text-zinc-300">{recipe.description}</p>
           </DetailCard>
 
           {/* Ingredients card */}
           <DetailCard
-            icon={<UtensilsCrossed className="w-4 h-4 text-emerald-400" />}
+            icon={<UtensilsCrossed className="h-4 w-4 text-emerald-400" />}
             label="Ingredientes"
             count={recipe.ingredients.length}
             delay="delay-300"
           >
             <ul className="space-y-2">
               {recipe.ingredients.map((ingredient, i) => (
-                <li key={i} className="flex items-start gap-3 group">
-                  <span className="flex shrink-0 items-center justify-center w-6 h-6 rounded-lg mt-0.5
-                                   bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-bold">
+                <li key={i} className="group flex items-start gap-3">
+                  <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border border-emerald-500/20 bg-emerald-500/10 text-xs font-bold text-emerald-400">
                     {i + 1}
                   </span>
-                  <span className="text-zinc-300 text-sm leading-relaxed">{ingredient}</span>
+                  <span className="text-sm leading-relaxed text-zinc-300">{ingredient}</span>
                 </li>
               ))}
             </ul>
@@ -93,7 +94,7 @@ export default async function RecipeDetailPage({ params }: PageProps) {
 
           {/* Steps card */}
           <DetailCard
-            icon={<ListOrdered className="w-4 h-4 text-purple-400" />}
+            icon={<ListOrdered className="h-4 w-4 text-purple-400" />}
             label="Modo de Preparo"
             count={recipe.prepareSteps.length}
             delay="delay-400"
@@ -102,28 +103,26 @@ export default async function RecipeDetailPage({ params }: PageProps) {
               {recipe.prepareSteps
                 .sort((a, b) => a.position - b.position)
                 .map((step) => (
-                  <li key={step.id} className="flex items-start gap-3 group">
-                    <span className="flex shrink-0 items-center justify-center w-7 h-7 rounded-lg mt-0.5
-                                     bg-gradient-to-br from-purple-500/15 to-indigo-500/15 border border-purple-500/20 
-                                     text-purple-400 text-xs font-bold">
+                  <li key={step.id} className="group flex items-start gap-3">
+                    <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border border-purple-500/20 bg-gradient-to-br from-purple-500/15 to-indigo-500/15 text-xs font-bold text-purple-400">
                       {step.position}
                     </span>
-                    <span className="text-zinc-300 text-sm leading-relaxed pt-1">{step.description}</span>
+                    <span className="pt-1 text-sm leading-relaxed text-zinc-300">
+                      {step.description}
+                    </span>
                   </li>
                 ))}
             </ol>
           </DetailCard>
 
           {/* Action buttons */}
-          <div className="flex gap-3 pt-2 pb-4 animate-fade-in-up delay-500">
+          <div className="animate-fade-in-up flex gap-3 pt-2 pb-4 delay-500">
             <Link href={`/recipes/${recipe.id}/edit`} className="flex-1">
               <Button
                 variant="outline"
-                className="w-full h-auto py-3.5 rounded-xl border-zinc-700/50 bg-zinc-800/60 text-zinc-300 
-                           hover:bg-zinc-800 hover:text-white hover:border-indigo-500/40
-                           transition-all duration-300 cursor-pointer flex items-center justify-center gap-2"
+                className="flex h-auto w-full cursor-pointer items-center justify-center gap-2 rounded-xl border-zinc-700/50 bg-zinc-800/60 py-3.5 text-zinc-300 transition-all duration-300 hover:border-indigo-500/40 hover:bg-zinc-800 hover:text-white"
               >
-                <Pencil className="w-4 h-4" />
+                <Pencil className="h-4 w-4" />
                 Editar receita
               </Button>
             </Link>
@@ -135,7 +134,7 @@ export default async function RecipeDetailPage({ params }: PageProps) {
       </div>
 
       {/* Right column: chat panel — fixed on desktop, hidden on mobile */}
-      <div className="hidden lg:flex w-[480px] shrink-0 h-screen border-l border-zinc-700/40 bg-zinc-800/40 backdrop-blur-sm relative z-10">
+      <div className="relative z-10 hidden h-screen w-[480px] shrink-0 border-l border-zinc-700/40 bg-zinc-800/40 backdrop-blur-sm lg:flex">
         <ChatPanel recipeId={recipe.id} initialMessages={messages} />
       </div>
 
@@ -144,4 +143,3 @@ export default async function RecipeDetailPage({ params }: PageProps) {
     </div>
   );
 }
-

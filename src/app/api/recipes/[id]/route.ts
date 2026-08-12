@@ -1,9 +1,6 @@
 import { apiFetch } from '@/lib/api/server';
 
-export async function PUT(
-  req: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function PUT(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const body = await req.json();
 
@@ -14,16 +11,16 @@ export async function PUT(
 
   if (!res.ok) {
     const errorText = await res.text();
-    return Response.json({ error: errorText || 'Erro ao atualizar receita.' }, { status: res.status });
+    return Response.json(
+      { error: errorText || 'Erro ao atualizar receita.' },
+      { status: res.status },
+    );
   }
 
   return new Response(null, { status: 204 }); // lembra: UpdateRecipeAsync não retorna corpo
 }
 
-export async function DELETE(
-  req: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function DELETE(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
 
   const res = await apiFetch(`/api/recipe/delete?recipeId=${id}`, { method: 'DELETE' });

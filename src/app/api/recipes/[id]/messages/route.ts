@@ -1,9 +1,6 @@
 import { apiFetch } from '@/lib/api/server';
 
-export async function POST(
-  req: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const body = await req.json();
 
@@ -14,7 +11,10 @@ export async function POST(
 
   if (!res.ok) {
     const errorText = await res.text();
-    return Response.json({ error: errorText || 'Erro ao enviar mensagem.' }, { status: res.status });
+    return Response.json(
+      { error: errorText || 'Erro ao enviar mensagem.' },
+      { status: res.status },
+    );
   }
 
   return Response.json(await res.json());

@@ -14,13 +14,17 @@ function timeAgo(dateString: string): string {
   return `Adicionada há ${weeks} semanas`;
 }
 
-export function RecipeCard({ recipe, index = 0 }: { recipe: RecipeSummaryResponse; index?: number }) {
+export function RecipeCard({
+  recipe,
+  index = 0,
+}: {
+  recipe: RecipeSummaryResponse;
+  index?: number;
+}) {
   return (
     <Link
       href={`/recipes/${recipe.id}`}
-      className="group relative flex flex-col rounded-2xl bg-zinc-800/60 border border-zinc-700/50 overflow-hidden 
-                 hover:border-indigo-500/40 hover:shadow-[0_8px_40px_-12px_rgba(99,102,241,0.25)] 
-                 transition-all duration-500 ease-out animate-fade-in-up"
+      className="group animate-fade-in-up relative flex flex-col overflow-hidden rounded-2xl border border-zinc-700/50 bg-zinc-800/60 transition-all duration-500 ease-out hover:border-indigo-500/40 hover:shadow-[0_8px_40px_-12px_rgba(99,102,241,0.25)]"
       style={{ animationDelay: `${index * 80}ms` }}
     >
       {/* Image container */}
@@ -33,39 +37,37 @@ export function RecipeCard({ recipe, index = 0 }: { recipe: RecipeSummaryRespons
             className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
           />
         ) : (
-          <div className="h-full w-full flex items-center justify-center bg-gradient-to-br from-zinc-800 to-zinc-900">
+          <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-zinc-800 to-zinc-900">
             <div className="flex flex-col items-center gap-2">
-              <div className="w-14 h-14 rounded-2xl bg-zinc-700/50 flex items-center justify-center group-hover:bg-indigo-500/20 transition-colors duration-500">
-                <CookingPot className="h-7 w-7 text-zinc-500 group-hover:text-indigo-400 transition-colors duration-500" />
+              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-zinc-700/50 transition-colors duration-500 group-hover:bg-indigo-500/20">
+                <CookingPot className="h-7 w-7 text-zinc-500 transition-colors duration-500 group-hover:text-indigo-400" />
               </div>
             </div>
           </div>
         )}
 
         {/* Gradient overlay on image */}
-        <div className="absolute inset-0 bg-gradient-to-t from-zinc-900/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+        <div className="absolute inset-0 bg-gradient-to-t from-zinc-900/80 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
 
         {/* Arrow icon that appears on hover */}
-        <div className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center 
-                        opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">
-          <ArrowUpRight className="w-4 h-4 text-white" />
+        <div className="absolute top-3 right-3 flex h-8 w-8 translate-y-2 items-center justify-center rounded-full bg-white/10 opacity-0 backdrop-blur-sm transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
+          <ArrowUpRight className="h-4 w-4 text-white" />
         </div>
       </div>
 
       {/* Content */}
-      <div className="flex flex-col gap-2 p-4 flex-1">
-        <h3 className="text-white font-semibold text-base leading-snug line-clamp-2 group-hover:text-indigo-300 transition-colors duration-300">
+      <div className="flex flex-1 flex-col gap-2 p-4">
+        <h3 className="line-clamp-2 text-base leading-snug font-semibold text-white transition-colors duration-300 group-hover:text-indigo-300">
           {recipe.title}
         </h3>
-        <div className="flex items-center gap-1.5 mt-auto">
-          <Clock className="w-3.5 h-3.5 text-zinc-500" />
-          <p className="text-zinc-500 text-sm">{timeAgo(recipe.createdAt)}</p>
+        <div className="mt-auto flex items-center gap-1.5">
+          <Clock className="h-3.5 w-3.5 text-zinc-500" />
+          <p className="text-sm text-zinc-500">{timeAgo(recipe.createdAt)}</p>
         </div>
       </div>
 
       {/* Bottom accent line */}
-      <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 
-                      scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
+      <div className="absolute right-0 bottom-0 left-0 h-[2px] origin-left scale-x-0 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 transition-transform duration-500 group-hover:scale-x-100" />
     </Link>
   );
 }

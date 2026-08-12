@@ -24,7 +24,7 @@ export async function proxy(req: NextRequest) {
   const refreshRes = await fetch(`${process.env.API_URL}/api/auth/refresh`, {
     method: 'POST',
     headers: {
-       Cookie: `refreshToken=${session.refreshToken}`,
+      Cookie: `refreshToken=${session.refreshToken}`,
     },
   });
 

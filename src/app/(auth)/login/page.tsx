@@ -22,8 +22,6 @@ import { GoogleLoginButton } from '../components/GoogleLoginButton';
 import { LoginFormValues, loginSchema } from '@/lib/validations/login';
 import { ChefHat, Mail, Lock, ArrowRight, Loader2 } from 'lucide-react';
 
-
-
 export default function LoginPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -47,10 +45,8 @@ export default function LoginPage() {
     setLoading(false);
 
     if (!res.ok) {
-
       const data = await res.json().catch(() => ({}));
-     
-      
+
       toast.add({
         description: data.error ?? 'Erro ao fazer login.',
         type: 'error',
@@ -60,55 +56,50 @@ export default function LoginPage() {
     }
 
     router.push('/');
-    router.refresh(); 
+    router.refresh();
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-zinc-900 relative overflow-hidden noise-overlay">
+    <div className="noise-overlay relative flex min-h-screen items-center justify-center overflow-hidden bg-zinc-900">
       {/* Background decorative elements */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute -top-40 -left-40 w-[500px] h-[500px] bg-indigo-600/10 rounded-full blur-3xl animate-pulse-soft" />
-        <div className="absolute -bottom-40 -right-40 w-[500px] h-[500px] bg-purple-600/8 rounded-full blur-3xl animate-pulse-soft delay-700" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] bg-violet-500/5 rounded-full blur-3xl" />
+      <div className="pointer-events-none absolute inset-0">
+        <div className="animate-pulse-soft absolute -top-40 -left-40 h-[500px] w-[500px] rounded-full bg-indigo-600/10 blur-3xl" />
+        <div className="animate-pulse-soft absolute -right-40 -bottom-40 h-[500px] w-[500px] rounded-full bg-purple-600/8 blur-3xl delay-700" />
+        <div className="absolute top-1/2 left-1/2 h-[300px] w-[300px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-violet-500/5 blur-3xl" />
       </div>
 
-      <div className="relative z-10 w-full max-w-[420px] px-5 animate-fade-in-up">
+      <div className="animate-fade-in-up relative z-10 w-full max-w-[420px] px-5">
         {/* Logo */}
-        <div className="flex flex-col items-center mb-10">
-          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center 
-                          shadow-xl shadow-indigo-500/25 mb-5 animate-float">
-            <ChefHat className="w-8 h-8 text-white" />
+        <div className="mb-10 flex flex-col items-center">
+          <div className="animate-float mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 shadow-xl shadow-indigo-500/25">
+            <ChefHat className="h-8 w-8 text-white" />
           </div>
-          <h1 className="text-2xl font-bold text-white mb-1">Bem-vindo de volta</h1>
-          <p className="text-zinc-400 text-sm">Entre na sua conta para acessar suas receitas</p>
+          <h1 className="mb-1 text-2xl font-bold text-white">Bem-vindo de volta</h1>
+          <p className="text-sm text-zinc-400">Entre na sua conta para acessar suas receitas</p>
         </div>
 
         {/* Card */}
-        <div className="glass-strong rounded-2xl p-7 animate-fade-in-up delay-200">
+        <div className="glass-strong animate-fade-in-up rounded-2xl p-7 delay-200">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-5">
-              
               <FormField
                 control={form.control}
                 name="email"
                 render={({ field }) => (
                   <FormItem className="flex flex-col gap-1.5 space-y-0">
-                    <FormLabel className="text-zinc-300 text-sm font-medium">
-                      E-mail
-                    </FormLabel>
+                    <FormLabel className="text-sm font-medium text-zinc-300">E-mail</FormLabel>
                     <FormControl>
                       <div className="relative">
-                        <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
-                        <Input 
-                          placeholder="seu@email.com" 
+                        <Mail className="absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-zinc-500" />
+                        <Input
+                          placeholder="seu@email.com"
                           type="email"
-                          className="bg-zinc-800/60 border border-zinc-700/50 text-white placeholder:text-zinc-500 h-12 rounded-xl pl-10
-                                     focus-visible:ring-2 focus-visible:ring-indigo-500/50 focus-visible:border-indigo-500/50 transition-all duration-300"
-                          {...field} 
+                          className="h-12 rounded-xl border border-zinc-700/50 bg-zinc-800/60 pl-10 text-white transition-all duration-300 placeholder:text-zinc-500 focus-visible:border-indigo-500/50 focus-visible:ring-2 focus-visible:ring-indigo-500/50"
+                          {...field}
                         />
                       </div>
                     </FormControl>
-                    <FormMessage className="text-red-400 text-sm" />
+                    <FormMessage className="text-sm text-red-400" />
                   </FormItem>
                 )}
               />
@@ -118,65 +109,60 @@ export default function LoginPage() {
                 name="password"
                 render={({ field }) => (
                   <FormItem className="flex flex-col gap-1.5 space-y-0">
-                    <FormLabel className="text-zinc-300 text-sm font-medium">
-                      Senha
-                    </FormLabel>
+                    <FormLabel className="text-sm font-medium text-zinc-300">Senha</FormLabel>
                     <FormControl>
                       <div className="relative">
-                        <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
-                        <Input 
-                          placeholder="••••••••" 
+                        <Lock className="absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-zinc-500" />
+                        <Input
+                          placeholder="••••••••"
                           type="password"
-                          className="bg-zinc-800/60 border border-zinc-700/50 text-white placeholder:text-zinc-500 h-12 rounded-xl pl-10
-                                     focus-visible:ring-2 focus-visible:ring-indigo-500/50 focus-visible:border-indigo-500/50 transition-all duration-300"
-                          {...field} 
+                          className="h-12 rounded-xl border border-zinc-700/50 bg-zinc-800/60 pl-10 text-white transition-all duration-300 placeholder:text-zinc-500 focus-visible:border-indigo-500/50 focus-visible:ring-2 focus-visible:ring-indigo-500/50"
+                          {...field}
                         />
                       </div>
                     </FormControl>
-                    <FormMessage className="text-red-400 text-sm" />
+                    <FormMessage className="text-sm text-red-400" />
                   </FormItem>
                 )}
               />
 
-              <Button 
-                type="submit" 
+              <Button
+                type="submit"
                 disabled={loading}
-                className="w-full h-12 mt-1 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-400 hover:to-purple-500 
-                           text-white text-sm font-semibold rounded-xl transition-all duration-300 cursor-pointer
-                           shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 hover:scale-[1.01] active:scale-[0.99]
-                           disabled:opacity-60 disabled:hover:scale-100 disabled:hover:shadow-indigo-500/25
-                           flex items-center justify-center gap-2"
+                className="mt-1 flex h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 text-sm font-semibold text-white shadow-lg shadow-indigo-500/25 transition-all duration-300 hover:scale-[1.01] hover:from-indigo-400 hover:to-purple-500 hover:shadow-indigo-500/40 active:scale-[0.99] disabled:opacity-60 disabled:hover:scale-100 disabled:hover:shadow-indigo-500/25"
               >
                 {loading ? (
                   <>
-                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <Loader2 className="h-4 w-4 animate-spin" />
                     Entrando...
                   </>
                 ) : (
                   <>
                     Entrar
-                    <ArrowRight className="w-4 h-4" />
+                    <ArrowRight className="h-4 w-4" />
                   </>
                 )}
               </Button>
-              
             </form>
           </Form>
 
           {/* Divider */}
-          <div className="flex items-center gap-4 my-6">
-            <div className="h-px bg-zinc-700/60 flex-1" />
-            <span className="text-zinc-500 text-xs font-medium uppercase tracking-wider">ou</span>
-            <div className="h-px bg-zinc-700/60 flex-1" />
+          <div className="my-6 flex items-center gap-4">
+            <div className="h-px flex-1 bg-zinc-700/60" />
+            <span className="text-xs font-medium tracking-wider text-zinc-500 uppercase">ou</span>
+            <div className="h-px flex-1 bg-zinc-700/60" />
           </div>
 
           <GoogleLoginButton />
         </div>
 
         {/* Footer link */}
-        <p className="mt-8 text-sm text-zinc-500 text-center animate-fade-in delay-500">
+        <p className="animate-fade-in mt-8 text-center text-sm text-zinc-500 delay-500">
           Não tem uma conta?{' '}
-          <Link href="/register" className="text-indigo-400 hover:text-indigo-300 font-medium transition-colors duration-200 cursor-pointer">
+          <Link
+            href="/register"
+            className="cursor-pointer font-medium text-indigo-400 transition-colors duration-200 hover:text-indigo-300"
+          >
             Criar conta
           </Link>
         </p>

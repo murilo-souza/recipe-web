@@ -7,32 +7,32 @@ export default async function NewRecipePage() {
   const categories = await getAllCategories();
 
   return (
-    <div className="min-h-screen bg-zinc-900 relative noise-overlay">
+    <div className="noise-overlay relative min-h-screen bg-zinc-900">
       {/* Background decorative elements */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute -top-40 -left-40 w-96 h-96 bg-indigo-500/8 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 -right-32 w-80 h-80 bg-purple-500/6 rounded-full blur-3xl" />
-        <div className="absolute top-1/2 left-1/3 w-64 h-64 bg-violet-500/4 rounded-full blur-3xl" />
+      <div className="pointer-events-none fixed inset-0 overflow-hidden">
+        <div className="absolute -top-40 -left-40 h-96 w-96 rounded-full bg-indigo-500/8 blur-3xl" />
+        <div className="absolute -right-32 bottom-1/4 h-80 w-80 rounded-full bg-purple-500/6 blur-3xl" />
+        <div className="absolute top-1/2 left-1/3 h-64 w-64 rounded-full bg-violet-500/4 blur-3xl" />
       </div>
 
-      <div className="relative z-10 max-w-5xl mx-auto px-6 sm:px-10 lg:px-14 py-10">
+      <div className="relative z-10 mx-auto max-w-5xl px-6 py-10 sm:px-10 lg:px-14">
         {/* Header */}
-        <div className="flex items-center gap-4 mb-10 animate-fade-in-up">
+        <div className="animate-fade-in-up mb-10 flex items-center gap-4">
           <Link
             href="/"
             aria-label="Voltar para a home"
-            className="flex items-center justify-center w-10 h-10 rounded-xl bg-zinc-800/60 border border-zinc-700/50 
-                       text-zinc-400 hover:text-white hover:border-indigo-500/40 hover:bg-zinc-800 
-                       transition-all duration-300 group"
+            className="group flex h-10 w-10 items-center justify-center rounded-xl border border-zinc-700/50 bg-zinc-800/60 text-zinc-400 transition-all duration-300 hover:border-indigo-500/40 hover:bg-zinc-800 hover:text-white"
           >
-            <ArrowLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform duration-300" />
+            <ArrowLeft className="h-4 w-4 transition-transform duration-300 group-hover:-translate-x-0.5" />
           </Link>
           <div>
-            <div className="flex items-center gap-2 mb-0.5">
-              <Sparkles className="w-3.5 h-3.5 text-indigo-400 animate-pulse-soft" />
-              <span className="text-xs text-indigo-400 font-medium uppercase tracking-wider">Nova receita</span>
+            <div className="mb-0.5 flex items-center gap-2">
+              <Sparkles className="animate-pulse-soft h-3.5 w-3.5 text-indigo-400" />
+              <span className="text-xs font-medium tracking-wider text-indigo-400 uppercase">
+                Nova receita
+              </span>
             </div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-white">Criar receita</h1>
+            <h1 className="text-2xl font-bold text-white sm:text-3xl">Criar receita</h1>
           </div>
         </div>
 

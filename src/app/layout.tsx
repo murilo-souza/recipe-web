@@ -10,16 +10,10 @@ export const metadata: Metadata = {
   description: 'Salve receitas criadas pela sua família em um banco de dados e nunca as perca.',
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="pt-BR">
-      <body 
-        className={`${inter.className} bg-zinc-900 text-zinc-50 antialiased min-h-screen`}
-      >
+      <body className={`${inter.className} min-h-screen bg-zinc-900 text-zinc-50 antialiased`}>
         {children}
         <Toaster />
       </body>

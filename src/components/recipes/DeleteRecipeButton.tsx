@@ -33,19 +33,16 @@ export function DeleteRecipeButton({ recipeId }: { recipeId: number }) {
       type="button"
       onClick={handleDelete}
       disabled={deleting}
-      className="w-full h-auto py-3.5 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400
-                 hover:bg-red-500/20 hover:border-red-500/30 hover:text-red-300
-                 disabled:opacity-50 transition-all duration-300 cursor-pointer
-                 flex items-center justify-center gap-2"
+      className="flex h-auto w-full cursor-pointer items-center justify-center gap-2 rounded-xl border border-red-500/20 bg-red-500/10 py-3.5 text-red-400 transition-all duration-300 hover:border-red-500/30 hover:bg-red-500/20 hover:text-red-300 disabled:opacity-50"
     >
       {deleting ? (
         <>
-          <Loader2 className="w-4 h-4 animate-spin" />
+          <Loader2 className="h-4 w-4 animate-spin" />
           Excluindo...
         </>
       ) : (
         <>
-          <Trash2 className="w-4 h-4" />
+          <Trash2 className="h-4 w-4" />
           Deletar receita
         </>
       )}
