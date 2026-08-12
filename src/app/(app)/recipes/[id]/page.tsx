@@ -135,7 +135,7 @@ export default async function RecipeDetailPage({ params }: PageProps) {
       </div>
 
       {/* Right column: chat panel — fixed on desktop, hidden on mobile */}
-      <div className="hidden lg:flex w-[400px] shrink-0 h-screen border-l border-zinc-700/40 bg-zinc-800/40 backdrop-blur-sm relative z-10">
+      <div className="hidden lg:flex w-[480px] shrink-0 h-screen border-l border-zinc-700/40 bg-zinc-800/40 backdrop-blur-sm relative z-10">
         <ChatPanel recipeId={recipe.id} initialMessages={messages} />
       </div>
 
