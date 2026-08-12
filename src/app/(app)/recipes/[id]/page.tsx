@@ -127,7 +127,7 @@ export default async function RecipeDetailPage({ params }: PageProps) {
               </Button>
             </Link>
             <div className="flex-1">
-              <DeleteRecipeButton recipeId={recipe.id} />
+              <DeleteRecipeButton recipeId={recipe.id} recipeTitle={recipe.title} />
             </div>
           </div>
         </div>
