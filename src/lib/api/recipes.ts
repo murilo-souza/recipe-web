@@ -8,7 +8,7 @@ export async function getAllRecipes(): Promise<RecipeSummaryResponse[]> {
 }
 
 export async function getRecipeById(id: number): Promise<RecipeResponse | null> {
-  const res = await apiFetch(`/api/recipe/get-recipe-by-id?id=${id}`);
+  const res = await apiFetch(`/api/recipe/get-recipe-by-id?recipeId=${id}`);
   if (res.status === 404) return null;
   if (!res.ok) throw new Error('Falha ao buscar receita.');
   return res.json();
