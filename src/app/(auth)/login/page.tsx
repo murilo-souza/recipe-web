@@ -19,13 +19,9 @@ import {
 import { useRouter } from 'next/navigation';
 import { toast } from '@/components/ui/toast';
 import { GoogleLoginButton } from '../components/GoogleLoginButton';
+import { LoginFormValues, loginSchema } from '@/lib/validations/login';
 
-const loginSchema = z.object({
-  email: z.string().email({ message: 'Digite um e-mail válido.' }),
-  password: z.string().min(1, { message: 'A senha é obrigatória.' }),
-});
 
-type LoginFormValues = z.infer<typeof loginSchema>;
 
 export default function LoginPage() {
   const router = useRouter();

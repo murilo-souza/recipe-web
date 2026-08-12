@@ -18,19 +18,8 @@ import {
 } from '@/components/ui/form';
 import { toast } from '@/components/ui/toast';
 import { useRouter } from 'next/navigation';
+import { RegisterFormValues, registerSchema } from '@/lib/validations/register';
 
-// 1. Schema de validação avançado com verificação de senhas iguais
-const registerSchema = z.object({
-  name: z.string().min(2, { message: 'O nome deve ter pelo menos 2 caracteres.' }),
-  email: z.string().email({ message: 'Digite um e-mail válido.' }),
-  password: z.string().min(6, { message: 'A senha deve ter no mínimo 6 caracteres.' }),
-  confirmPassword: z.string(),
-}).refine((data) => data.password === data.confirmPassword, {
-  message: 'As senhas não coincidem.',
-  path: ['confirmPassword'], // O erro vai aparecer embaixo do campo de confirmar senha
-});
-
-type RegisterFormValues = z.infer<typeof registerSchema>;
 
 export default function RegisterPage() {
   const router = useRouter();
