@@ -4,9 +4,11 @@ import { RecipeGrid } from '@/components/recipes/RecipeGrid';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { User, Plus, ChefHat, Sparkles } from 'lucide-react';
+import { LogoutButton } from '@/components/auth/LogoutButton';
 
 export default async function HomePage() {
   const [session, recipes] = await Promise.all([getSession(), getAllRecipes()]);
+
 
   // Greeting based on time of day
   const hour = new Date().getHours();
@@ -46,10 +48,7 @@ export default async function HomePage() {
                     Nova Receita
                   </Button>
                 </Link>
-                <div className="h-10 w-10 rounded-full bg-zinc-800 border border-zinc-700/50 flex items-center justify-center 
-                                hover:border-indigo-500/40 transition-colors duration-300 cursor-pointer">
-                  <User className="h-5 w-5 text-zinc-400" />
-                </div>
+                <LogoutButton />
               </div>
             </div>
           </div>
