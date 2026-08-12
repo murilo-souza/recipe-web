@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Trash2, Plus } from 'lucide-react';
+import { Trash2, Plus, GripVertical } from 'lucide-react';
 
 interface DynamicListInputProps {
   label: string;
@@ -35,59 +35,96 @@ export function DynamicListInput({ label, placeholder, items, onChange }: Dynami
 
   return (
     <div className="space-y-3">
-      <label className="text-sm font-semibold text-slate-100">{label}</label>
+      <label className="text-sm font-semibold text-zinc-200 flex items-center gap-2">
+        {label}
+        {items.length > 0 && (
+          <span className="text-xs font-normal text-zinc-500 bg-zinc-800/60 px-2 py-0.5 rounded-full">
+            {items.length}
+          </span>
+        )}
+      </label>
 
+      {/* Input row */}
       <div className="flex gap-2">
-        <Input
-          value={draft}
-          onChange={(e) => setDraft(e.target.value)}
-          onKeyDown={handleKeyDown}
-          placeholder={placeholder}
-          className="rounded bg-zinc-700 border-indigo-400"
-          aria-label={`Novo item em ${label}`}
-        />
+        <div className="relative flex-1">
+          <Input
+            value={draft}
+            onChange={(e) => setDraft(e.target.value)}
+            onKeyDown={handleKeyDown}
+            placeholder={placeholder}
+            className="bg-zinc-800/60 border border-zinc-700/50 text-white placeholder:text-zinc-500 h-11 rounded-xl
+                       focus-visible:ring-2 focus-visible:ring-indigo-500/50 focus-visible:border-indigo-500/50 transition-all duration-300"
+            aria-label={`Novo item em ${label}`}
+          />
+        </div>
         <Button
           type="button"
           onClick={handleAdd}
-          className="rounded bg-indigo-600 hover:bg-indigo-700 shrink-0"
+          disabled={!draft.trim()}
+          className="shrink-0 h-11 px-4 rounded-xl bg-indigo-500 hover:bg-indigo-400 text-white text-sm font-medium
+                     shadow-md shadow-indigo-500/15 hover:shadow-indigo-500/25 transition-all duration-300 cursor-pointer
+                     disabled:opacity-40 disabled:hover:bg-indigo-500 disabled:hover:shadow-indigo-500/15
+                     flex items-center gap-1.5"
         >
-          <Plus className="w-4 h-4 mr-1" aria-hidden="true" /> Adicionar
+          <Plus className="w-4 h-4" aria-hidden="true" />
+          <span className="hidden sm:inline">Adicionar</span>
         </Button>
       </div>
 
+      {/* Items list */}
       {items.length > 0 ? (
         <ul
-          className="space-y-1.5 max-h-60 overflow-y-auto pr-0.5"
+          className="space-y-2 max-h-72 overflow-y-auto pr-1"
           role="list"
           aria-label={`Lista de ${label.toLowerCase()}`}
         >
           {items.map((item, index) => (
             <li
               key={index}
-              className="flex items-center gap-3 rounded-sm bg-zinc-800 px-3 py-2.5"
+              className="group flex items-center gap-3 rounded-xl bg-zinc-800/50 border border-zinc-700/30 px-3 py-2.5
+                         hover:border-zinc-600/50 hover:bg-zinc-800/70 transition-all duration-200 animate-fade-in-up"
+              style={{ animationDelay: `${index * 40}ms` }}
             >
+              {/* Grip handle (visual only) */}
+              <GripVertical className="w-3.5 h-3.5 text-zinc-600 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
+
+              {/* Number badge */}
               <span
                 aria-hidden="true"
-                className="flex shrink-0 items-center justify-center w-5 h-5 rounded-full bg-indigo-600 text-white text-xs font-bold"
+                className="flex shrink-0 items-center justify-center w-6 h-6 rounded-lg bg-gradient-to-br from-indigo-500/20 to-purple-500/20 
+                           text-indigo-400 text-xs font-bold border border-indigo-500/20"
               >
                 {index + 1}
               </span>
-              <span className="flex-1 text-white text-sm">{item}</span>
+
+              {/* Content */}
+              <span className="flex-1 text-zinc-200 text-sm leading-snug">{item}</span>
+
+              {/* Remove button */}
               <button
                 type="button"
                 onClick={() => handleRemove(index)}
-                className="shrink-0 rounded-sm bg-red-500/15 p-1.5 hover:bg-red-500/25 transition-colors"
+                className="shrink-0 w-7 h-7 rounded-lg flex items-center justify-center
+                           text-zinc-500 hover:text-red-400 hover:bg-red-500/10 
+                           opacity-0 group-hover:opacity-100 transition-all duration-200 cursor-pointer"
                 aria-label={`Remover ${item}`}
               >
-                <Trash2 className="w-3.5 h-3.5 text-red-500" aria-hidden="true" />
+                <Trash2 className="w-3.5 h-3.5" aria-hidden="true" />
               </button>
             </li>
           ))}
         </ul>
       ) : (
-        <p className="py-3 text-center text-xs text-zinc-500">
-          Nenhum item adicionado ainda
-        </p>
+        <div className="flex flex-col items-center justify-center py-8 rounded-xl border-2 border-dashed border-zinc-700/40">
+          <div className="w-10 h-10 rounded-xl bg-zinc-800/60 flex items-center justify-center mb-2">
+            <Plus className="w-4 h-4 text-zinc-600" />
+          </div>
+          <p className="text-xs text-zinc-500 text-center">
+            Nenhum item adicionado.
+            <br />
+            <span className="text-zinc-600">Digite e pressione Enter ou clique em Adicionar.</span>
+          </p>
+        </div>
       )}
     </div>
   );

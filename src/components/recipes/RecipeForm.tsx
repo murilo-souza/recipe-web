@@ -5,7 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { CldUploadWidget } from 'next-cloudinary';
-import { ImagePlus } from 'lucide-react';
+import { ImagePlus, Upload, ChefHat, ListOrdered, Loader2, ArrowRight, AlertCircle, Camera } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -68,59 +68,76 @@ export function RecipeForm({ categories }: RecipeFormProps) {
       onSubmit={handleSubmit(onSubmit)}
       noValidate
       aria-label="Formulário de receita"
-      className="space-y-8"
+      className="space-y-10"
     >
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
-        {/* Coluna esquerda — Informações básicas */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-14">
+        {/* ─── Left column — Basic info ─── */}
         <fieldset className="space-y-6 min-w-0">
-          <legend className="w-full pb-2 mb-2 text-base font-semibold text-slate-100 border-b border-zinc-700">
-            Informações básicas
+          <legend className="w-full pb-3 mb-1 flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg bg-indigo-500/15 flex items-center justify-center shrink-0">
+              <ChefHat className="w-4 h-4 text-indigo-400" />
+            </div>
+            <div>
+              <span className="text-base font-semibold text-white block leading-tight">Informações básicas</span>
+              <span className="text-xs text-zinc-500">Dados gerais da receita</span>
+            </div>
           </legend>
 
-          <div className="space-y-3">
-            <label htmlFor="title" className="text-sm font-semibold text-slate-100">
-              Título <span aria-hidden="true" className="text-red-400">*</span>
+          {/* Separator */}
+          <div className="h-px bg-gradient-to-r from-zinc-700/60 via-zinc-700/30 to-transparent" />
+
+          {/* Title */}
+          <div className="space-y-2">
+            <label htmlFor="title" className="text-sm font-medium text-zinc-300 flex items-center gap-1">
+              Título <span aria-hidden="true" className="text-indigo-400">*</span>
             </label>
             <Input
               id="title"
               {...register('title')}
-              placeholder="Digite o título da sua receita"
-              className="rounded bg-zinc-700 border-indigo-400"
+              placeholder="Ex: Bolo de chocolate da vovó"
+              className="bg-zinc-800/60 border border-zinc-700/50 text-white placeholder:text-zinc-500 h-12 rounded-xl
+                         focus-visible:ring-2 focus-visible:ring-indigo-500/50 focus-visible:border-indigo-500/50 transition-all duration-300"
               aria-required="true"
               aria-invalid={!!errors.title}
               aria-describedby={errors.title ? 'title-error' : undefined}
             />
             {errors.title && (
-              <p id="title-error" role="alert" className="text-red-500 text-xs">
+              <p id="title-error" role="alert" className="text-red-400 text-xs flex items-center gap-1">
+                <AlertCircle className="w-3 h-3" />
                 {errors.title.message}
               </p>
             )}
           </div>
 
-          <div className="space-y-3">
-            <label htmlFor="description" className="text-sm font-semibold text-slate-100">
-              Descrição <span aria-hidden="true" className="text-red-400">*</span>
+          {/* Description */}
+          <div className="space-y-2">
+            <label htmlFor="description" className="text-sm font-medium text-zinc-300 flex items-center gap-1">
+              Descrição <span aria-hidden="true" className="text-indigo-400">*</span>
             </label>
             <textarea
               id="description"
               {...register('description')}
-              placeholder="Dê uma descrição para sua receita"
-              rows={3}
-              className="w-full rounded border border-indigo-400 bg-zinc-700 px-2.5 py-2 text-sm text-white placeholder:text-zinc-400 resize-none outline-none focus-visible:ring-2 focus-visible:ring-indigo-400/50 transition-shadow"
+              placeholder="Conte um pouco sobre esta receita..."
+              rows={4}
+              className="w-full rounded-xl border border-zinc-700/50 bg-zinc-800/60 px-4 py-3 text-sm text-white placeholder:text-zinc-500 
+                         resize-none outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/50 focus-visible:border-indigo-500/50 
+                         transition-all duration-300"
               aria-required="true"
               aria-invalid={!!errors.description}
               aria-describedby={errors.description ? 'description-error' : undefined}
             />
             {errors.description && (
-              <p id="description-error" role="alert" className="text-red-500 text-xs">
+              <p id="description-error" role="alert" className="text-red-400 text-xs flex items-center gap-1">
+                <AlertCircle className="w-3 h-3" />
                 {errors.description.message}
               </p>
             )}
           </div>
 
-          <div className="space-y-3">
-            <label htmlFor="categoryId" className="text-sm font-semibold text-slate-100">
-              Categoria <span aria-hidden="true" className="text-red-400">*</span>
+          {/* Category */}
+          <div className="space-y-2">
+            <label htmlFor="categoryId" className="text-sm font-medium text-zinc-300 flex items-center gap-1">
+              Categoria <span aria-hidden="true" className="text-indigo-400">*</span>
             </label>
             <Controller
               name="categoryId"
@@ -132,7 +149,11 @@ export function RecipeForm({ categories }: RecipeFormProps) {
                 >
                   <SelectTrigger
                     id="categoryId"
-                    className="w-full rounded bg-indigo-600 border-indigo-500 text-white hover:bg-indigo-700 data-placeholder:text-indigo-200 [&_svg]:text-indigo-200"
+                    className="w-full h-12 rounded-xl bg-zinc-800/60 border border-zinc-700/50 text-white 
+                               hover:border-zinc-600/50 hover:bg-zinc-800/80
+                               data-placeholder:text-zinc-500 [&_svg]:text-zinc-400
+                               focus-visible:ring-2 focus-visible:ring-indigo-500/50 focus-visible:border-indigo-500/50 
+                               transition-all duration-300"
                     aria-required="true"
                     aria-invalid={!!errors.categoryId}
                     aria-describedby={errors.categoryId ? 'categoryId-error' : undefined}
@@ -150,14 +171,17 @@ export function RecipeForm({ categories }: RecipeFormProps) {
               )}
             />
             {errors.categoryId && (
-              <p id="categoryId-error" role="alert" className="text-red-500 text-xs">
+              <p id="categoryId-error" role="alert" className="text-red-400 text-xs flex items-center gap-1">
+                <AlertCircle className="w-3 h-3" />
                 {errors.categoryId.message}
               </p>
             )}
           </div>
 
-          <div className="space-y-3">
-            <label className="text-sm font-semibold text-slate-100" id="image-label">
+          {/* Image upload */}
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-zinc-300 flex items-center gap-2" id="image-label">
+              <Camera className="w-3.5 h-3.5 text-zinc-400" />
               Imagem
             </label>
             <Controller
@@ -174,21 +198,24 @@ export function RecipeForm({ categories }: RecipeFormProps) {
                 >
                   {({ open }) =>
                     field.value ? (
-                      <div className="relative rounded-md overflow-hidden">
+                      <div className="relative rounded-2xl overflow-hidden group border border-zinc-700/50">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
                           src={field.value}
                           alt="Prévia da receita"
-                          className="h-40 w-full object-cover"
+                          className="h-48 w-full object-cover transition-transform duration-500 group-hover:scale-105"
                         />
-                        <div className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent 
+                                        flex items-end justify-center pb-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                           <Button
                             type="button"
                             variant="outline"
                             size="sm"
                             onClick={() => open()}
-                            className="border-white text-white hover:bg-white/20 hover:text-white"
+                            className="border-white/30 text-white bg-white/10 backdrop-blur-sm hover:bg-white/20 hover:text-white 
+                                       rounded-xl px-4 py-2 h-auto text-sm cursor-pointer"
                           >
+                            <Upload className="w-3.5 h-3.5 mr-1.5" />
                             Trocar imagem
                           </Button>
                         </div>
@@ -198,10 +225,20 @@ export function RecipeForm({ categories }: RecipeFormProps) {
                         type="button"
                         onClick={() => open()}
                         aria-labelledby="image-label"
-                        className="w-full h-32 rounded-md border-2 border-dashed border-indigo-400/60 bg-zinc-700/50 flex flex-col items-center justify-center gap-2 text-zinc-400 hover:border-indigo-400 hover:text-slate-200 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400/50"
+                        className="w-full h-40 rounded-2xl border-2 border-dashed border-zinc-700/50 bg-zinc-800/30 
+                                   flex flex-col items-center justify-center gap-3 
+                                   text-zinc-500 hover:border-indigo-500/40 hover:text-zinc-300 hover:bg-zinc-800/50
+                                   transition-all duration-300 cursor-pointer group
+                                   focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/50"
                       >
-                        <ImagePlus className="w-6 h-6" aria-hidden="true" />
-                        <span className="text-sm">Clique para enviar uma imagem</span>
+                        <div className="w-12 h-12 rounded-2xl bg-zinc-700/40 flex items-center justify-center
+                                        group-hover:bg-indigo-500/15 transition-colors duration-300">
+                          <ImagePlus className="w-5 h-5 group-hover:text-indigo-400 transition-colors duration-300" aria-hidden="true" />
+                        </div>
+                        <div className="text-center">
+                          <span className="text-sm font-medium block">Clique para enviar</span>
+                          <span className="text-xs text-zinc-600 mt-0.5 block">JPG, PNG ou WebP</span>
+                        </div>
                       </button>
                     )
                   }
@@ -211,63 +248,101 @@ export function RecipeForm({ categories }: RecipeFormProps) {
           </div>
         </fieldset>
 
-        {/* Coluna direita — Ingredientes e preparo */}
+        {/* ─── Right column — Ingredients & Steps ─── */}
         <fieldset className="space-y-6 min-w-0">
-          <legend className="w-full pb-2 mb-2 text-base font-semibold text-slate-100 border-b border-zinc-700">
-            Ingredientes e preparo
+          <legend className="w-full pb-3 mb-1 flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg bg-purple-500/15 flex items-center justify-center shrink-0">
+              <ListOrdered className="w-4 h-4 text-purple-400" />
+            </div>
+            <div>
+              <span className="text-base font-semibold text-white block leading-tight">Ingredientes e preparo</span>
+              <span className="text-xs text-zinc-500">Detalhes de como preparar</span>
+            </div>
           </legend>
 
-          <div className="space-y-1.5">
+          {/* Separator */}
+          <div className="h-px bg-gradient-to-r from-zinc-700/60 via-zinc-700/30 to-transparent" />
+
+          <div className="space-y-2">
             <Controller
               name="ingredients"
               control={control}
               render={({ field }) => (
                 <DynamicListInput
                   label="Ingredientes"
-                  placeholder="Digite um ingrediente e adicione"
+                  placeholder="Ex: 2 xícaras de farinha de trigo"
                   items={field.value}
                   onChange={field.onChange}
                 />
               )}
             />
             {errors.ingredients && (
-              <p role="alert" className="text-red-500 text-xs">{errors.ingredients.message}</p>
+              <p role="alert" className="text-red-400 text-xs flex items-center gap-1">
+                <AlertCircle className="w-3 h-3" />
+                {errors.ingredients.message}
+              </p>
             )}
           </div>
 
-          <div className="space-y-1.5">
+          {/* Spacer between the two lists */}
+          <div className="h-px bg-gradient-to-r from-transparent via-zinc-700/30 to-transparent" />
+
+          <div className="space-y-2">
             <Controller
               name="prepareSteps"
               control={control}
               render={({ field }) => (
                 <DynamicListInput
                   label="Modo de Preparo"
-                  placeholder="Digite um passo e adicione"
+                  placeholder="Ex: Pré-aqueça o forno a 180°C"
                   items={field.value}
                   onChange={field.onChange}
                 />
               )}
             />
             {errors.prepareSteps && (
-              <p role="alert" className="text-red-500 text-xs">{errors.prepareSteps.message}</p>
+              <p role="alert" className="text-red-400 text-xs flex items-center gap-1">
+                <AlertCircle className="w-3 h-3" />
+                {errors.prepareSteps.message}
+              </p>
             )}
           </div>
         </fieldset>
       </div>
 
+      {/* Error banner */}
       {submitError && (
-        <p role="alert" className="text-red-500 text-sm">
-          {submitError}
-        </p>
+        <div className="flex items-center gap-3 rounded-xl bg-red-500/10 border border-red-500/20 px-4 py-3 animate-fade-in-up">
+          <AlertCircle className="w-4 h-4 text-red-400 shrink-0" />
+          <p role="alert" className="text-red-400 text-sm">{submitError}</p>
+        </div>
       )}
 
-      <div className="flex justify-end pt-4 border-t border-zinc-700">
+      {/* Submit section */}
+      <div className="flex items-center justify-between pt-6 border-t border-zinc-800/60">
+        <p className="text-xs text-zinc-600 hidden sm:block">
+          Campos com <span className="text-indigo-400">*</span> são obrigatórios
+        </p>
         <Button
           type="submit"
           disabled={isSubmitting}
-          className="rounded bg-indigo-600 hover:bg-indigo-700 px-10 py-4 h-auto"
+          className="ml-auto h-12 px-8 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-400 hover:to-purple-500 
+                     text-white text-sm font-semibold transition-all duration-300 cursor-pointer
+                     shadow-lg shadow-indigo-500/20 hover:shadow-indigo-500/35 hover:scale-[1.01] active:scale-[0.99]
+                     disabled:opacity-60 disabled:hover:scale-100 disabled:hover:shadow-indigo-500/20
+                     flex items-center gap-2"
         >
-          {isSubmitting ? 'Salvando...' : 'Salvar receita'}
+          {isSubmitting ? (
+            <>
+              <Loader2 className="w-4 h-4 animate-spin" />
+              Salvando...
+            </>
+          ) : (
+            <>
+              Salvar receita
+              <ArrowRight className="w-4 h-4" />
+            </>
+          )}
         </Button>
       </div>
     </form>
