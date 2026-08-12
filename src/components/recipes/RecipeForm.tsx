@@ -84,7 +84,7 @@ export function RecipeForm({ categories }: RecipeFormProps) {
           </legend>
 
           {/* Separator */}
-          <div className="h-px bg-gradient-to-r from-zinc-700/60 via-zinc-700/30 to-transparent" />
+          <div className="h-px bg-linear-to-t from-zinc-700/60 via-zinc-700/30 to-transparent" />
 
           {/* Title */}
           <div className="space-y-2">
@@ -205,7 +205,7 @@ export function RecipeForm({ categories }: RecipeFormProps) {
                           alt="Prévia da receita"
                           className="h-48 w-full object-cover transition-transform duration-500 group-hover:scale-105"
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent 
+                        <div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/20 to-transparent 
                                         flex items-end justify-center pb-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                           <Button
                             type="button"
@@ -261,7 +261,7 @@ export function RecipeForm({ categories }: RecipeFormProps) {
           </legend>
 
           {/* Separator */}
-          <div className="h-px bg-gradient-to-r from-zinc-700/60 via-zinc-700/30 to-transparent" />
+          <div className="h-px bg-linear-to-t from-zinc-700/60 via-zinc-700/30 to-transparent" />
 
           <div className="space-y-2">
             <Controller
@@ -285,7 +285,7 @@ export function RecipeForm({ categories }: RecipeFormProps) {
           </div>
 
           {/* Spacer between the two lists */}
-          <div className="h-px bg-gradient-to-r from-transparent via-zinc-700/30 to-transparent" />
+          <div className="h-px bg-linear-to-t from-transparent via-zinc-700/30 to-transparent" />
 
           <div className="space-y-2">
             <Controller
@@ -326,7 +326,7 @@ export function RecipeForm({ categories }: RecipeFormProps) {
         <Button
           type="submit"
           disabled={isSubmitting}
-          className="ml-auto h-12 px-8 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-400 hover:to-purple-500 
+          className="ml-auto h-12 px-8 rounded-xl bg-linear-to-t from-indigo-500 to-purple-600 hover:from-indigo-400 hover:to-purple-500 
                      text-white text-sm font-semibold transition-all duration-300 cursor-pointer
                      shadow-lg shadow-indigo-500/20 hover:shadow-indigo-500/35 hover:scale-[1.01] active:scale-[0.99]
                      disabled:opacity-60 disabled:hover:scale-100 disabled:hover:shadow-indigo-500/20
