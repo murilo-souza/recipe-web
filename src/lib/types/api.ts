@@ -40,3 +40,17 @@ export interface RecipeResponse {
   prepareSteps: PrepareStepItem[];
   createdAt: string;
 }
+
+export interface CreateRecipeRequest {
+  title: string;
+  description: string;
+  categoryId: number;
+  image: string | null;
+  ingredients: string[];
+  prepareSteps: string[];
+}
+
+export interface CategoryResponse {
+  id: number;
+  name: string;
+}
