@@ -127,7 +127,7 @@ export function RecipeForm({ categories }: RecipeFormProps) {
               control={control}
               render={({ field }) => (
                 <Select
-                  value={field.value != null ? String(field.value) : undefined}
+                  value={field.value != null ? String(field.value) : ''}
                   onValueChange={(val) => field.onChange(val)}
                 >
                   <SelectTrigger
