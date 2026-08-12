@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
+import { Trash2, Loader2 } from 'lucide-react';
 
 export function DeleteRecipeButton({ recipeId }: { recipeId: number }) {
   const router = useRouter();
@@ -32,9 +33,22 @@ export function DeleteRecipeButton({ recipeId }: { recipeId: number }) {
       type="button"
       onClick={handleDelete}
       disabled={deleting}
-      className="bg-red-600 hover:bg-red-700 flex-1 h-auto py-3.5"
+      className="w-full h-auto py-3.5 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400
+                 hover:bg-red-500/20 hover:border-red-500/30 hover:text-red-300
+                 disabled:opacity-50 transition-all duration-300 cursor-pointer
+                 flex items-center justify-center gap-2"
     >
-      {deleting ? 'Excluindo...' : 'Deletar receita'}
+      {deleting ? (
+        <>
+          <Loader2 className="w-4 h-4 animate-spin" />
+          Excluindo...
+        </>
+      ) : (
+        <>
+          <Trash2 className="w-4 h-4" />
+          Deletar receita
+        </>
+      )}
     </Button>
   );
 }

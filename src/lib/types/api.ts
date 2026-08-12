@@ -54,3 +54,11 @@ export interface CategoryResponse {
   id: number;
   name: string;
 }
+
+export interface ChatMessageResponse {
+  id: number;
+  role: string; // "User" | "Assistant"
+  content: string;
+  recipeId: number;
+  createdAt: string;
+}
