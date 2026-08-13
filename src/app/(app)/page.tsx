@@ -1,5 +1,4 @@
 import { getAllRecipes } from '@/lib/api/recipes';
-import { getSession } from '@/lib/session';
 import { RecipeGrid } from '@/components/recipes/RecipeGrid';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
@@ -47,14 +46,14 @@ export default async function HomePage() {
                   </Button>
                 </Link>
                 <Link
-                  className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl border border-zinc-700/50 bg-zinc-800 transition-colors duration-300 hover:border-indigo-500/40"
+                  className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border border-zinc-700/50 bg-zinc-800 transition-colors duration-300 hover:border-indigo-500/40"
                   href="/profile"
                 >
                   {user?.profileImage ? (
                     <img
                       src={user.profileImage}
                       alt="Profile"
-                      className="h-full w-full object-cover"
+                      className="h-full w-full rounded-full object-cover"
                     />
                   ) : (
                     <User className="h-5 w-5 text-zinc-400" />
