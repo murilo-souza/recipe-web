@@ -3,11 +3,12 @@ import { getSession } from '@/lib/session';
 import { RecipeGrid } from '@/components/recipes/RecipeGrid';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { Plus, ChefHat, Sparkles } from 'lucide-react';
+import { Plus, ChefHat, Sparkles, User } from 'lucide-react';
 import { LogoutButton } from '@/components/auth/LogoutButton';
+import { getCurrentUser } from '@/lib/api/user';
 
 export default async function HomePage() {
-  const [session, recipes] = await Promise.all([getSession(), getAllRecipes()]);
+  const [recipes, user] = await Promise.all([getAllRecipes(), getCurrentUser()]);
 
   // Greeting based on time of day
   const hour = new Date().getHours();
@@ -45,6 +46,20 @@ export default async function HomePage() {
                     Nova Receita
                   </Button>
                 </Link>
+                <Link
+                  className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl border border-zinc-700/50 bg-zinc-800 transition-colors duration-300 hover:border-indigo-500/40"
+                  href="/profile"
+                >
+                  {user?.profileImage ? (
+                    <img
+                      src={user.profileImage}
+                      alt="Profile"
+                      className="h-full w-full object-cover"
+                    />
+                  ) : (
+                    <User className="h-5 w-5 text-zinc-400" />
+                  )}
+                </Link>
                 <LogoutButton />
               </div>
             </div>
@@ -60,9 +75,9 @@ export default async function HomePage() {
                 <span className="text-sm font-medium text-indigo-400">{greeting}</span>
               </div>
               <h1 className="text-3xl leading-tight font-bold text-white sm:text-4xl">
-                {session?.userName ? (
+                {user?.name ? (
                   <>
-                    Olá, <span className="gradient-text">{session.userName}</span>
+                    Olá, <span className="gradient-text">{user.name}</span>
                   </>
                 ) : (
                   'Suas Receitas'
