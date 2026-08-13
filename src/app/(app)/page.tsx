@@ -32,9 +32,7 @@ export default async function HomePage() {
                 <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 shadow-lg shadow-indigo-500/20">
                   <ChefHat className="h-5 w-5 text-white" />
                 </div>
-                <span className="hidden text-lg font-semibold text-white sm:block">
-                  Receitas de Família
-                </span>
+                <span className="hidden text-lg font-semibold text-white sm:block">Receitas</span>
               </div>
 
               {/* User area */}
