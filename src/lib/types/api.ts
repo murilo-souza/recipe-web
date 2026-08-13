@@ -62,3 +62,15 @@ export interface ChatMessageResponse {
   recipeId: number;
   createdAt: string;
 }
+
+export interface UpdateUserRequest {
+  name: string;
+  profileImage: string | null;
+}
+
+export interface UserResponse {
+  id: number;
+  name: string;
+  email: string;
+  profileImage: string | null;
+}

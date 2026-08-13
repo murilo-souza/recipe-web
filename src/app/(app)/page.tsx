@@ -1,13 +1,13 @@
 import { getAllRecipes } from '@/lib/api/recipes';
-import { getSession } from '@/lib/session';
 import { RecipeGrid } from '@/components/recipes/RecipeGrid';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { Plus, ChefHat, Sparkles } from 'lucide-react';
+import { Plus, ChefHat, Sparkles, User } from 'lucide-react';
 import { LogoutButton } from '@/components/auth/LogoutButton';
+import { getCurrentUser } from '@/lib/api/user';
 
 export default async function HomePage() {
-  const [session, recipes] = await Promise.all([getSession(), getAllRecipes()]);
+  const [recipes, user] = await Promise.all([getAllRecipes(), getCurrentUser()]);
 
   // Greeting based on time of day
   const hour = new Date().getHours();
@@ -32,9 +32,7 @@ export default async function HomePage() {
                 <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 shadow-lg shadow-indigo-500/20">
                   <ChefHat className="h-5 w-5 text-white" />
                 </div>
-                <span className="hidden text-lg font-semibold text-white sm:block">
-                  Receitas de Família
-                </span>
+                <span className="hidden text-lg font-semibold text-white sm:block">Receitas</span>
               </div>
 
               {/* User area */}
@@ -44,6 +42,20 @@ export default async function HomePage() {
                     <Plus className="h-4 w-4" />
                     Nova Receita
                   </Button>
+                </Link>
+                <Link
+                  className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border border-zinc-700/50 bg-zinc-800 transition-colors duration-300 hover:border-indigo-500/40"
+                  href="/profile"
+                >
+                  {user?.profileImage ? (
+                    <img
+                      src={user.profileImage}
+                      alt="Profile"
+                      className="h-full w-full rounded-full object-cover"
+                    />
+                  ) : (
+                    <User className="h-5 w-5 text-zinc-400" />
+                  )}
                 </Link>
                 <LogoutButton />
               </div>
@@ -60,9 +72,9 @@ export default async function HomePage() {
                 <span className="text-sm font-medium text-indigo-400">{greeting}</span>
               </div>
               <h1 className="text-3xl leading-tight font-bold text-white sm:text-4xl">
-                {session?.userName ? (
+                {user?.name ? (
                   <>
-                    Olá, <span className="gradient-text">{session.userName}</span>
+                    Olá, <span className="gradient-text">{user.name}</span>
                   </>
                 ) : (
                   'Suas Receitas'

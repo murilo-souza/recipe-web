@@ -6,7 +6,7 @@ import { Toaster } from '@/components/ui/toast';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'Receitas de Família',
+  title: 'Receitas',
   description: 'Salve receitas criadas pela sua família em um banco de dados e nunca as perca.',
 };
 
