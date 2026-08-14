@@ -86,7 +86,7 @@ export function DynamicListInput({ label, placeholder, items, onChange }: Dynami
               {/* Number badge */}
               <span
                 aria-hidden="true"
-                className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border border-indigo-500/20 bg-gradient-to-br from-indigo-500/20 to-purple-500/20 text-xs font-bold text-indigo-400"
+                className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border border-indigo-500/20 bg-linear-to-br from-indigo-500/20 to-purple-500/20 text-xs font-bold text-indigo-400"
               >
                 {index + 1}
               </span>

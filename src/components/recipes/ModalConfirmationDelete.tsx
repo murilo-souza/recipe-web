@@ -37,18 +37,19 @@ export function ModalConfirmationDelete({
         <div className="flex justify-center">
           <div className="relative flex h-16 w-16 items-center justify-center">
             {/* Pulsing ring */}
-            <div className="absolute inset-0 animate-ping rounded-full bg-red-500/10" style={{ animationDuration: '2s' }} />
+            <div
+              className="absolute inset-0 animate-ping rounded-full bg-red-500/10"
+              style={{ animationDuration: '2s' }}
+            />
             {/* Outer glow ring */}
-            <div className="absolute inset-0 rounded-full border border-red-500/20 bg-gradient-to-br from-red-500/10 to-red-600/5" />
+            <div className="absolute inset-0 rounded-full border border-red-500/20 bg-linear-to-br from-red-500/10 to-red-600/5" />
             {/* Icon */}
             <Trash2 className="relative h-7 w-7 text-red-400" />
           </div>
         </div>
 
         <DialogHeader className="items-center text-center">
-          <DialogTitle className="text-lg font-semibold text-white">
-            Excluir receita
-          </DialogTitle>
+          <DialogTitle className="text-lg font-semibold text-white">Excluir receita</DialogTitle>
           <DialogDescription className="text-sm leading-relaxed text-zinc-400">
             Tem certeza que deseja excluir{' '}
             <span className="font-medium text-red-400">&ldquo;{recipeTitle}&rdquo;</span>?

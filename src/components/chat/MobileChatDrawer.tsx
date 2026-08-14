@@ -19,7 +19,7 @@ export function MobileChatDrawer({ recipeId, initialMessages }: MobileChatDrawer
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="fixed right-6 bottom-6 z-40 flex h-14 w-14 cursor-pointer items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 text-white shadow-xl shadow-indigo-500/30 transition-all duration-300 hover:scale-105 hover:shadow-indigo-500/45 active:scale-95 lg:hidden"
+        className="fixed right-6 bottom-6 z-40 flex h-14 w-14 cursor-pointer items-center justify-center rounded-2xl bg-linear-to-br from-indigo-500 to-purple-600 text-white shadow-xl shadow-indigo-500/30 transition-all duration-300 hover:scale-105 hover:shadow-indigo-500/45 active:scale-95 lg:hidden"
         aria-label="Abrir assistente IA"
       >
         <MessageSquareText className="h-6 w-6" />

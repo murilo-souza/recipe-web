@@ -99,7 +99,7 @@ export default async function RecipeDetailPage({ params }: PageProps) {
                 .sort((a, b) => a.position - b.position)
                 .map((step) => (
                   <li key={step.id} className="group flex items-start gap-3">
-                    <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border border-purple-500/20 bg-gradient-to-br from-purple-500/15 to-indigo-500/15 text-xs font-bold text-purple-400">
+                    <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border border-purple-500/20 bg-linear-to-br from-purple-500/15 to-indigo-500/15 text-xs font-bold text-purple-400">
                       {step.position}
                     </span>
                     <span className="pt-1 text-sm leading-relaxed text-zinc-300">
@@ -129,7 +129,7 @@ export default async function RecipeDetailPage({ params }: PageProps) {
       </div>
 
       {/* Right column: chat panel — fixed on desktop, hidden on mobile */}
-      <div className="relative z-10 hidden h-screen w-[480px] shrink-0 border-l border-zinc-700/40 bg-zinc-800/40 backdrop-blur-sm lg:flex">
+      <div className="relative z-10 hidden h-screen w-120 shrink-0 border-l border-zinc-700/40 bg-zinc-800/40 backdrop-blur-sm lg:flex">
         <ChatPanel recipeId={recipe.id} initialMessages={messages} />
       </div>
 

@@ -28,7 +28,7 @@ export function RecipeCard({
       style={{ animationDelay: `${index * 80}ms` }}
     >
       {/* Image container */}
-      <div className="relative h-[180px] w-full overflow-hidden bg-zinc-900/50">
+      <div className="relative h-45 w-full overflow-hidden bg-zinc-900/50">
         {recipe.image ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
@@ -37,7 +37,7 @@ export function RecipeCard({
             className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
           />
         ) : (
-          <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-zinc-800 to-zinc-900">
+          <div className="flex h-full w-full items-center justify-center bg-linear-to-br from-zinc-800 to-zinc-900">
             <div className="flex flex-col items-center gap-2">
               <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-zinc-700/50 transition-colors duration-500 group-hover:bg-indigo-500/20">
                 <CookingPot className="h-7 w-7 text-zinc-500 transition-colors duration-500 group-hover:text-indigo-400" />
@@ -47,7 +47,7 @@ export function RecipeCard({
         )}
 
         {/* Gradient overlay on image */}
-        <div className="absolute inset-0 bg-gradient-to-t from-zinc-900/80 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+        <div className="absolute inset-0 bg-linear-to-br from-zinc-900/80 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
 
         {/* Arrow icon that appears on hover */}
         <div className="absolute top-3 right-3 flex h-8 w-8 translate-y-2 items-center justify-center rounded-full bg-white/10 opacity-0 backdrop-blur-sm transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
@@ -67,7 +67,7 @@ export function RecipeCard({
       </div>
 
       {/* Bottom accent line */}
-      <div className="absolute right-0 bottom-0 left-0 h-[2px] origin-left scale-x-0 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 transition-transform duration-500 group-hover:scale-x-100" />
+      <div className="absolute right-0 bottom-0 left-0 h-0.5 origin-left scale-x-0 bg-linear-to-br from-indigo-500 via-purple-500 to-pink-500 transition-transform duration-500 group-hover:scale-x-100" />
     </Link>
   );
 }

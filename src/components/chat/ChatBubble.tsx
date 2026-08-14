@@ -14,7 +14,7 @@ export function ChatBubble({ message }: { message: ChatMessageResponse }) {
         {/* Avatar */}
         <div
           className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-lg ${
-            isUser ? 'bg-indigo-500/20' : 'bg-gradient-to-br from-purple-500/20 to-indigo-500/20'
+            isUser ? 'bg-indigo-500/20' : 'bg-linear-to-br from-purple-500/20 to-indigo-500/20'
           }`}
         >
           {isUser ? (
@@ -28,7 +28,7 @@ export function ChatBubble({ message }: { message: ChatMessageResponse }) {
         <div
           className={`rounded-2xl px-4 py-3 text-sm leading-relaxed ${
             isUser
-              ? 'rounded-br-md bg-gradient-to-br from-indigo-500 to-indigo-600 text-white shadow-lg shadow-indigo-500/15'
+              ? 'rounded-br-md bg-linear-to-br from-indigo-500 to-indigo-600 text-white shadow-lg shadow-indigo-500/15'
               : 'rounded-bl-md border border-zinc-600/30 bg-zinc-700/60 text-zinc-200'
           }`}
         >
