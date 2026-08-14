@@ -56,10 +56,9 @@ export function ProfileForm({ user }: { user: UserResponse }) {
         render={({ field }) => (
           <div className="flex flex-col items-center gap-4">
             {/* Avatar circle */}
-            <div className="relative group">
-              <div className="absolute -inset-1 bg-gradient-to-br from-indigo-500/30 to-purple-500/30 rounded-full blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              <div className="relative h-28 w-28 overflow-hidden rounded-full bg-zinc-700/60 border-2 border-zinc-600/50 
-                              group-hover:border-indigo-500/40 transition-colors duration-300">
+            <div className="group relative">
+              <div className="absolute -inset-1 rounded-full bg-linear-to-br from-indigo-500/30 to-purple-500/30 opacity-0 blur-lg transition-opacity duration-500 group-hover:opacity-100" />
+              <div className="relative h-28 w-28 overflow-hidden rounded-full border-2 border-zinc-600/50 bg-zinc-700/60 transition-colors duration-300 group-hover:border-indigo-500/40">
                 {field.value ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
@@ -68,8 +67,8 @@ export function ProfileForm({ user }: { user: UserResponse }) {
                     className="h-full w-full object-cover"
                   />
                 ) : (
-                  <div className="h-full w-full flex items-center justify-center bg-gradient-to-br from-zinc-700 to-zinc-800">
-                    <User className="w-10 h-10 text-zinc-500" />
+                  <div className="flex h-full w-full items-center justify-center bg-linear-to-br from-zinc-700 to-zinc-800">
+                    <User className="h-10 w-10 text-zinc-500" />
                   </div>
                 )}
               </div>
@@ -88,19 +87,16 @@ export function ProfileForm({ user }: { user: UserResponse }) {
                 <button
                   type="button"
                   onClick={() => open()}
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium
-                             bg-zinc-800/60 border border-zinc-700/50 text-zinc-300
-                             hover:bg-zinc-800 hover:text-white hover:border-indigo-500/40
-                             transition-all duration-300 cursor-pointer"
+                  className="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-zinc-700/50 bg-zinc-800/60 px-4 py-2 text-sm font-medium text-zinc-300 transition-all duration-300 hover:border-indigo-500/40 hover:bg-zinc-800 hover:text-white"
                 >
                   {field.value ? (
                     <>
-                      <Camera className="w-3.5 h-3.5" />
+                      <Camera className="h-3.5 w-3.5" />
                       Trocar foto
                     </>
                   ) : (
                     <>
-                      <Upload className="w-3.5 h-3.5" />
+                      <Upload className="h-3.5 w-3.5" />
                       Adicionar foto
                     </>
                   )}
@@ -112,27 +108,32 @@ export function ProfileForm({ user }: { user: UserResponse }) {
       />
 
       {/* Separator */}
-      <div className="h-px bg-gradient-to-r from-transparent via-zinc-700/50 to-transparent" />
+      <div className="h-px bg-linear-to-r from-transparent via-zinc-700/50 to-transparent" />
 
       {/* Fields */}
       <div className="space-y-5">
         {/* Name */}
         <div className="space-y-2">
-          <label htmlFor="profile-name" className="text-sm font-medium text-zinc-300 flex items-center gap-1">
-            Nome <span aria-hidden="true" className="text-indigo-400">*</span>
+          <label
+            htmlFor="profile-name"
+            className="flex items-center gap-1 text-sm font-medium text-zinc-300"
+          >
+            Nome{' '}
+            <span aria-hidden="true" className="text-indigo-400">
+              *
+            </span>
           </label>
           <div className="relative">
-            <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
+            <User className="absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-zinc-500" />
             <Input
               id="profile-name"
               {...register('name')}
-              className="bg-zinc-800/60 border border-zinc-700/50 text-white placeholder:text-zinc-500 h-12 rounded-xl pl-10
-                         focus-visible:ring-2 focus-visible:ring-indigo-500/50 focus-visible:border-indigo-500/50 transition-all duration-300"
+              className="h-12 rounded-xl border border-zinc-700/50 bg-zinc-800/60 pl-10 text-white transition-all duration-300 placeholder:text-zinc-500 focus-visible:border-indigo-500/50 focus-visible:ring-2 focus-visible:ring-indigo-500/50"
             />
           </div>
           {errors.name && (
-            <p className="text-red-400 text-xs flex items-center gap-1">
-              <AlertCircle className="w-3 h-3" />
+            <p className="flex items-center gap-1 text-xs text-red-400">
+              <AlertCircle className="h-3 w-3" />
               {errors.name.message}
             </p>
           )}
@@ -140,20 +141,23 @@ export function ProfileForm({ user }: { user: UserResponse }) {
 
         {/* Email (read-only) */}
         <div className="space-y-2">
-          <label htmlFor="profile-email" className="text-sm font-medium text-zinc-300 flex items-center gap-2">
-            <Lock className="w-3 h-3 text-zinc-600" />
+          <label
+            htmlFor="profile-email"
+            className="flex items-center gap-2 text-sm font-medium text-zinc-300"
+          >
+            <Lock className="h-3 w-3 text-zinc-600" />
             Email
           </label>
           <div className="relative">
-            <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-600" />
+            <Mail className="absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-zinc-600" />
             <Input
               id="profile-email"
               value={user.email}
               disabled
-              className="bg-zinc-800/30 border border-zinc-700/30 text-zinc-500 h-12 rounded-xl pl-10 cursor-not-allowed"
+              className="h-12 cursor-not-allowed rounded-xl border border-zinc-700/30 bg-zinc-800/30 pl-10 text-zinc-500"
             />
           </div>
-          <p className="text-xs text-zinc-600 flex items-center gap-1">
+          <p className="flex items-center gap-1 text-xs text-zinc-600">
             O email não pode ser alterado.
           </p>
         </div>
@@ -161,9 +165,9 @@ export function ProfileForm({ user }: { user: UserResponse }) {
 
       {/* Error banner */}
       {submitError && (
-        <div className="flex items-center gap-3 rounded-xl bg-red-500/10 border border-red-500/20 px-4 py-3 animate-fade-in-up">
-          <AlertCircle className="w-4 h-4 text-red-400 shrink-0" />
-          <p className="text-red-400 text-sm">{submitError}</p>
+        <div className="animate-fade-in-up flex items-center gap-3 rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3">
+          <AlertCircle className="h-4 w-4 shrink-0 text-red-400" />
+          <p className="text-sm text-red-400">{submitError}</p>
         </div>
       )}
 
@@ -171,21 +175,17 @@ export function ProfileForm({ user }: { user: UserResponse }) {
       <Button
         type="submit"
         disabled={isSubmitting}
-        className="w-full h-12 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-400 hover:to-purple-500 
-                   text-white text-sm font-semibold rounded-xl transition-all duration-300 cursor-pointer
-                   shadow-lg shadow-indigo-500/20 hover:shadow-indigo-500/35 hover:scale-[1.01] active:scale-[0.99]
-                   disabled:opacity-60 disabled:hover:scale-100 disabled:hover:shadow-indigo-500/20
-                   flex items-center justify-center gap-2"
+        className="flex h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-linear-to-r from-indigo-500 to-purple-600 text-sm font-semibold text-white shadow-lg shadow-indigo-500/20 transition-all duration-300 hover:scale-[1.01] hover:from-indigo-400 hover:to-purple-500 hover:shadow-indigo-500/35 active:scale-[0.99] disabled:opacity-60 disabled:hover:scale-100 disabled:hover:shadow-indigo-500/20"
       >
         {isSubmitting ? (
           <>
-            <Loader2 className="w-4 h-4 animate-spin" />
+            <Loader2 className="h-4 w-4 animate-spin" />
             Salvando...
           </>
         ) : (
           <>
             Salvar alterações
-            <ArrowRight className="w-4 h-4" />
+            <ArrowRight className="h-4 w-4" />
           </>
         )}
       </Button>

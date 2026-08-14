@@ -64,15 +64,15 @@ export default function RegisterPage() {
     <div className="noise-overlay relative flex min-h-screen items-center justify-center overflow-hidden bg-zinc-900">
       {/* Background decorative elements */}
       <div className="pointer-events-none absolute inset-0">
-        <div className="animate-pulse-soft absolute -top-40 -right-40 h-[500px] w-[500px] rounded-full bg-purple-600/10 blur-3xl" />
-        <div className="animate-pulse-soft absolute -bottom-40 -left-40 h-[500px] w-[500px] rounded-full bg-indigo-600/8 blur-3xl delay-700" />
-        <div className="absolute top-1/3 left-1/2 h-[300px] w-[300px] -translate-x-1/2 rounded-full bg-violet-500/5 blur-3xl" />
+        <div className="animate-pulse-soft absolute -top-40 -right-40 h-125 w-125 rounded-full bg-purple-600/10 blur-3xl" />
+        <div className="animate-pulse-soft absolute -bottom-40 -left-40 h-125 w-125 rounded-full bg-indigo-600/8 blur-3xl delay-700" />
+        <div className="absolute top-1/3 left-1/2 h-75 w-75 -translate-x-1/2 rounded-full bg-violet-500/5 blur-3xl" />
       </div>
 
-      <div className="animate-fade-in-up relative z-10 w-full max-w-[420px] px-5 py-10">
+      <div className="animate-fade-in-up relative z-10 w-full max-w-105 px-5 py-10">
         {/* Logo */}
         <div className="mb-10 flex flex-col items-center">
-          <div className="animate-float mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-purple-500 to-indigo-600 shadow-xl shadow-purple-500/25">
+          <div className="animate-float mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-linear-to-br from-purple-500 to-indigo-600 shadow-xl shadow-purple-500/25">
             <ChefHat className="h-8 w-8 text-white" />
           </div>
           <h1 className="mb-1 text-2xl font-bold text-white">Crie sua conta</h1>
@@ -182,7 +182,7 @@ export default function RegisterPage() {
               <Button
                 type="submit"
                 disabled={loading}
-                className="mt-1 flex h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-purple-500 to-indigo-600 text-sm font-semibold text-white shadow-lg shadow-purple-500/25 transition-all duration-300 hover:scale-[1.01] hover:from-purple-400 hover:to-indigo-500 hover:shadow-purple-500/40 active:scale-[0.99] disabled:opacity-60 disabled:hover:scale-100 disabled:hover:shadow-purple-500/25"
+                className="mt-1 flex h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-linear-to-r from-purple-500 to-indigo-600 text-sm font-semibold text-white shadow-lg shadow-purple-500/25 transition-all duration-300 hover:scale-[1.01] hover:from-purple-400 hover:to-indigo-500 hover:shadow-purple-500/40 active:scale-[0.99] disabled:opacity-60 disabled:hover:scale-100 disabled:hover:shadow-purple-500/25"
               >
                 {loading ? (
                   <>

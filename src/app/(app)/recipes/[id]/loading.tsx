@@ -13,7 +13,7 @@ export default function Loading() {
         {/* Pulsing logo */}
         <div className="relative">
           <div className="animate-pulse-soft absolute inset-0 scale-150 rounded-2xl bg-indigo-500/20 blur-xl" />
-          <div className="animate-float relative flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 shadow-xl shadow-indigo-500/25">
+          <div className="animate-float relative flex h-16 w-16 items-center justify-center rounded-2xl bg-linear-to-br from-indigo-500 to-purple-600 shadow-xl shadow-indigo-500/25">
             <ChefHat className="h-8 w-8 text-white" />
           </div>
         </div>

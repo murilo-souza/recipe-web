@@ -6,8 +6,9 @@ import { DeleteRecipeButton } from '@/components/recipes/DeleteRecipeButton';
 import { getChatMessages } from '@/lib/api/chat';
 import { ChatPanel } from '@/components/chat/ChatPanel';
 import { MobileChatDrawer } from '@/components/chat/MobileChatDrawer';
-import { ArrowLeft, FileText, ListOrdered, Pencil, UtensilsCrossed } from 'lucide-react';
+import { FileText, ListOrdered, Pencil, UtensilsCrossed } from 'lucide-react';
 import { DetailCard } from '@/components/recipes/DetailCard';
+import { ReturnButton } from '../../components/ReturnButton';
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -35,13 +36,7 @@ export default async function RecipeDetailPage({ params }: PageProps) {
         <div className="mx-auto max-w-3xl space-y-8 px-6 py-10 sm:px-10">
           {/* Header */}
           <div className="animate-fade-in-up flex items-center gap-4">
-            <Link
-              href="/"
-              aria-label="Voltar para a home"
-              className="group flex h-10 w-10 items-center justify-center rounded-xl border border-zinc-700/50 bg-zinc-800/60 text-zinc-400 transition-all duration-300 hover:border-indigo-500/40 hover:bg-zinc-800 hover:text-white"
-            >
-              <ArrowLeft className="h-4 w-4 transition-transform duration-300 group-hover:-translate-x-0.5" />
-            </Link>
+            <ReturnButton href="/" tooltip="Voltar para a home" />
             <div>
               <span className="text-xs font-medium tracking-wider text-indigo-400 uppercase">
                 Receita
@@ -104,7 +99,7 @@ export default async function RecipeDetailPage({ params }: PageProps) {
                 .sort((a, b) => a.position - b.position)
                 .map((step) => (
                   <li key={step.id} className="group flex items-start gap-3">
-                    <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border border-purple-500/20 bg-gradient-to-br from-purple-500/15 to-indigo-500/15 text-xs font-bold text-purple-400">
+                    <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border border-purple-500/20 bg-linear-to-br from-purple-500/15 to-indigo-500/15 text-xs font-bold text-purple-400">
                       {step.position}
                     </span>
                     <span className="pt-1 text-sm leading-relaxed text-zinc-300">
@@ -134,7 +129,7 @@ export default async function RecipeDetailPage({ params }: PageProps) {
       </div>
 
       {/* Right column: chat panel — fixed on desktop, hidden on mobile */}
-      <div className="relative z-10 hidden h-screen w-[480px] shrink-0 border-l border-zinc-700/40 bg-zinc-800/40 backdrop-blur-sm lg:flex">
+      <div className="relative z-10 hidden h-screen w-120 shrink-0 border-l border-zinc-700/40 bg-zinc-800/40 backdrop-blur-sm lg:flex">
         <ChatPanel recipeId={recipe.id} initialMessages={messages} />
       </div>
 

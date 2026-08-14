@@ -3,7 +3,17 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { ChatBubble } from './ChatBubble';
 import type { ChatMessageResponse } from '@/lib/types/api';
-import { Bot, SendHorizonal, Loader2, MessageSquare, AlertCircle, Sparkles } from 'lucide-react';
+import {
+  Bot,
+  SendHorizonal,
+  Loader2,
+  MessageSquare,
+  AlertCircle,
+  Sparkles,
+  Trash,
+} from 'lucide-react';
+import { Button } from '../ui/button';
+import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
 
 interface ChatPanelProps {
   recipeId: number;
@@ -80,6 +90,20 @@ export function ChatPanel({ recipeId, initialMessages }: ChatPanelProps) {
     setMessages((prev) => [...prev, aiMessage]);
   }
 
+  async function handleDeleteAll() {
+    if (sending) return;
+    try {
+      await fetch(`/api/recipes/${recipeId}/messages`, {
+        method: 'DELETE',
+      });
+
+      setMessages([]);
+    } catch (err) {
+      setError('Não foi possível deletar as mensagens.');
+      return;
+    }
+  }
+
   function handleKeyDown(e: React.KeyboardEvent) {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
@@ -90,9 +114,9 @@ export function ChatPanel({ recipeId, initialMessages }: ChatPanelProps) {
   return (
     <div className="flex h-full w-full flex-col">
       {/* Header */}
-      <div className="shrink-0 border-b border-zinc-700/40 px-6 pt-6 pb-4">
+      <div className="flex shrink-0 items-center justify-between gap-3 border-b border-zinc-700/40 px-6 pt-6 pb-4">
         <div className="flex items-center gap-3">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-purple-500/20 bg-gradient-to-br from-purple-500/20 to-indigo-500/20">
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-purple-500/20 bg-linear-to-br from-purple-500/20 to-indigo-500/20">
             <Sparkles className="h-4 w-4 text-purple-400" />
           </div>
           <div>
@@ -100,6 +124,23 @@ export function ChatPanel({ recipeId, initialMessages }: ChatPanelProps) {
             <p className="text-xs text-zinc-500">Pergunte sobre a receita</p>
           </div>
         </div>
+        <Tooltip>
+          <TooltipTrigger
+            render={
+              <Button
+                type="button"
+                className="cursor-pointer hover:ring-1 hover:ring-purple-500/20"
+                onClick={handleDeleteAll}
+              >
+                <Trash className="h-4 w-4 text-red-400" />
+              </Button>
+            }
+          />
+
+          <TooltipContent>
+            <p>Deletar todas as mensagens</p>
+          </TooltipContent>
+        </Tooltip>
       </div>
 
       {/* Messages area */}
@@ -113,7 +154,7 @@ export function ChatPanel({ recipeId, initialMessages }: ChatPanelProps) {
               </div>
             </div>
             <p className="mb-1 text-sm font-medium text-zinc-400">Nenhuma mensagem</p>
-            <p className="max-w-[220px] text-center text-xs leading-relaxed text-zinc-600">
+            <p className="max-w-55 text-center text-xs leading-relaxed text-zinc-600">
               Pergunte sobre substituições de ingredientes, tempo de preparo ou dicas.
             </p>
           </div>
@@ -125,7 +166,7 @@ export function ChatPanel({ recipeId, initialMessages }: ChatPanelProps) {
         {/* Typing indicator */}
         {sending && (
           <div className="animate-fade-in flex items-end gap-2.5">
-            <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-purple-500/20 to-indigo-500/20">
+            <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-linear-to-br from-purple-500/20 to-indigo-500/20">
               <Bot className="h-3.5 w-3.5 text-purple-400" />
             </div>
             <div className="rounded-2xl rounded-bl-md border border-zinc-600/30 bg-zinc-700/60 px-4 py-3">
@@ -173,7 +214,7 @@ export function ChatPanel({ recipeId, initialMessages }: ChatPanelProps) {
             type="button"
             onClick={handleSend}
             disabled={sending || !draft.trim()}
-            className="mb-px flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 text-white shadow-md shadow-indigo-500/15 transition-all duration-300 hover:from-indigo-400 hover:to-purple-500 hover:shadow-indigo-500/30 disabled:opacity-30 disabled:hover:from-indigo-500 disabled:hover:to-purple-600 disabled:hover:shadow-indigo-500/15"
+            className="mb-px flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-lg bg-linear-to-br from-indigo-500 to-purple-600 text-white shadow-md shadow-indigo-500/15 transition-all duration-300 hover:from-indigo-400 hover:to-purple-500 hover:shadow-indigo-500/30 disabled:opacity-30 disabled:hover:from-indigo-500 disabled:hover:to-purple-600 disabled:hover:shadow-indigo-500/15"
           >
             {sending ? (
               <Loader2 className="h-4 w-4 animate-spin" />
