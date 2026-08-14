@@ -98,7 +98,7 @@ export function DynamicListInput({ label, placeholder, items, onChange }: Dynami
               <button
                 type="button"
                 onClick={() => handleRemove(index)}
-                className="flex h-7 w-7 shrink-0 cursor-pointer items-center justify-center rounded-lg text-zinc-500 opacity-0 transition-all duration-200 group-hover:opacity-100 hover:bg-red-500/10 hover:text-red-400"
+                className="flex h-7 w-7 shrink-0 cursor-pointer items-center justify-center rounded-lg text-zinc-500 transition-all duration-200 hover:bg-red-500/10 hover:text-red-400"
                 aria-label={`Remover ${item}`}
               >
                 <Trash2 className="h-3.5 w-3.5" aria-hidden="true" />
