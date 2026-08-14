@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { getCurrentUser } from '@/lib/api/user';
 import { ProfileForm } from '@/components/users/ProfileForm';
 import { ArrowLeft, Sparkles } from 'lucide-react';
+import { ReturnButton } from '../components/ReturnButton';
 
 export default async function ProfilePage() {
   const user = await getCurrentUser();
@@ -22,13 +23,7 @@ export default async function ProfilePage() {
       <div className="relative z-10 mx-auto max-w-2xl px-6 py-10 sm:px-10">
         {/* Header */}
         <div className="animate-fade-in-up mb-10 flex items-center gap-4">
-          <Link
-            href="/"
-            aria-label="Voltar para a home"
-            className="group flex h-10 w-10 items-center justify-center rounded-xl border border-zinc-700/50 bg-zinc-800/60 text-zinc-400 transition-all duration-300 hover:border-indigo-500/40 hover:bg-zinc-800 hover:text-white"
-          >
-            <ArrowLeft className="h-4 w-4 transition-transform duration-300 group-hover:-translate-x-0.5" />
-          </Link>
+          <ReturnButton href="/" tooltip="Voltar para a home" />
           <div>
             <div className="mb-0.5 flex items-center gap-2">
               <Sparkles className="animate-pulse-soft h-3.5 w-3.5 text-indigo-400" />
