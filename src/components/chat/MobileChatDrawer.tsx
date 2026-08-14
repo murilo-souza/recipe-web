@@ -45,7 +45,7 @@ export function MobileChatDrawer({ recipeId, initialMessages }: MobileChatDrawer
         <button
           type="button"
           onClick={() => setOpen(false)}
-          className="absolute top-4 right-4 z-10 flex h-8 w-8 cursor-pointer items-center justify-center rounded-xl border border-zinc-700/50 bg-zinc-800/60 text-zinc-400 transition-colors duration-200 hover:text-white"
+          className="absolute top-2 right-3 z-10 flex h-8 w-8 cursor-pointer items-center justify-center rounded-xl border border-zinc-700/50 bg-zinc-800/60 text-zinc-400 transition-colors duration-200 hover:text-white"
           aria-label="Fechar chat"
         >
           <X className="h-4 w-4" />

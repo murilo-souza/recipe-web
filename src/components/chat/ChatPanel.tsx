@@ -3,7 +3,17 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { ChatBubble } from './ChatBubble';
 import type { ChatMessageResponse } from '@/lib/types/api';
-import { Bot, SendHorizonal, Loader2, MessageSquare, AlertCircle, Sparkles } from 'lucide-react';
+import {
+  Bot,
+  SendHorizonal,
+  Loader2,
+  MessageSquare,
+  AlertCircle,
+  Sparkles,
+  Trash,
+} from 'lucide-react';
+import { Button } from '../ui/button';
+import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
 
 interface ChatPanelProps {
   recipeId: number;
@@ -80,6 +90,20 @@ export function ChatPanel({ recipeId, initialMessages }: ChatPanelProps) {
     setMessages((prev) => [...prev, aiMessage]);
   }
 
+  async function handleDeleteAll() {
+    if (sending) return;
+    try {
+      await fetch(`/api/recipes/${recipeId}/messages`, {
+        method: 'DELETE',
+      });
+
+      setMessages([]);
+    } catch (err) {
+      setError('Não foi possível deletar as mensagens.');
+      return;
+    }
+  }
+
   function handleKeyDown(e: React.KeyboardEvent) {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
@@ -90,7 +114,7 @@ export function ChatPanel({ recipeId, initialMessages }: ChatPanelProps) {
   return (
     <div className="flex h-full w-full flex-col">
       {/* Header */}
-      <div className="shrink-0 border-b border-zinc-700/40 px-6 pt-6 pb-4">
+      <div className="flex shrink-0 items-center justify-between gap-3 border-b border-zinc-700/40 px-6 pt-6 pb-4">
         <div className="flex items-center gap-3">
           <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-purple-500/20 bg-gradient-to-br from-purple-500/20 to-indigo-500/20">
             <Sparkles className="h-4 w-4 text-purple-400" />
@@ -100,6 +124,23 @@ export function ChatPanel({ recipeId, initialMessages }: ChatPanelProps) {
             <p className="text-xs text-zinc-500">Pergunte sobre a receita</p>
           </div>
         </div>
+        <Tooltip>
+          <TooltipTrigger
+            render={
+              <Button
+                type="button"
+                className="cursor-pointer hover:ring-1 hover:ring-purple-500/20"
+                onClick={handleDeleteAll}
+              >
+                <Trash className="h-4 w-4 text-red-400" />
+              </Button>
+            }
+          />
+
+          <TooltipContent>
+            <p>Deletar todas as mensagens</p>
+          </TooltipContent>
+        </Tooltip>
       </div>
 
       {/* Messages area */}
