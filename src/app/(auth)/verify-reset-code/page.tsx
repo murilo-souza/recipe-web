@@ -1,13 +1,13 @@
 'use client';
 
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { MailCheck, ArrowRight, Loader2, AlertCircle, ArrowLeft } from 'lucide-react';
 
-export default function VerifyResetCodePage() {
+function VerifyResetCodeForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const email = searchParams.get('email') ?? '';
@@ -60,8 +60,9 @@ export default function VerifyResetCodePage() {
             <MailCheck className="h-8 w-8 text-white" />
           </div>
           <h1 className="mb-1 text-2xl font-bold text-white">Verifique seu e-mail</h1>
-          <p className="text-sm text-zinc-400 text-center">
-            Enviamos um código de 6 dígitos para <span className="font-medium text-zinc-300">{email}</span>
+          <p className="text-center text-sm text-zinc-400">
+            Enviamos um código de 6 dígitos para{' '}
+            <span className="font-medium text-zinc-300">{email}</span>
           </p>
         </div>
 
@@ -109,12 +110,20 @@ export default function VerifyResetCodePage() {
 
         <Link
           href="/forgot-password"
-          className="animate-fade-in mt-8 flex cursor-pointer items-center justify-center gap-2 text-sm font-medium text-zinc-500 transition-colors duration-200 hover:text-indigo-400 delay-500"
+          className="animate-fade-in mt-8 flex cursor-pointer items-center justify-center gap-2 text-sm font-medium text-zinc-500 transition-colors delay-500 duration-200 hover:text-indigo-400"
         >
           <ArrowLeft className="h-4 w-4" />
           Tentar outro e-mail
         </Link>
       </div>
     </div>
+  );
+}
+
+export default function VerifyResetCodePage() {
+  return (
+    <Suspense fallback={null}>
+      <VerifyResetCodeForm />
+    </Suspense>
   );
 }
