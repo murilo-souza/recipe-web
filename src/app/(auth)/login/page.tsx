@@ -77,7 +77,6 @@ export default function LoginPage() {
           <h1 className="mb-1 text-2xl font-bold text-white">Bem-vindo de volta</h1>
           <p className="text-sm text-zinc-400">Entre na sua conta para acessar suas receitas</p>
         </div>
-
         {/* Card */}
         <div className="glass-strong animate-fade-in-up rounded-2xl p-7 delay-200">
           <Form {...form}>
@@ -144,6 +143,12 @@ export default function LoginPage() {
                 )}
               </Button>
             </form>
+            <Link
+              href="/forgot-password"
+              className="mt-4 flex justify-center text-center text-sm text-zinc-400 transition-colors duration-200 hover:text-white"
+            >
+              Esqueci minha senha
+            </Link>
           </Form>
 
           {/* Divider */}
@@ -156,8 +161,7 @@ export default function LoginPage() {
           <GoogleLoginButton />
         </div>
 
-        {/* Footer link */}
-        <p className="animate-fade-in mt-8 text-center text-sm text-zinc-500 delay-500">
+        <p className="animate-fade-in mt-2 text-center text-sm text-zinc-500 delay-500">
           Não tem uma conta?{' '}
           <Link
             href="/register"

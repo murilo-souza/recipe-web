@@ -1,0 +1,17 @@
+// src/app/api/auth/verify-reset-code/route.ts
+export async function POST(req: Request) {
+  const body = await req.json();
+
+  const res = await fetch(`${process.env.API_URL}/api/auth/verify-reset-code`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    return Response.json({ error: data.error ?? 'Código inválido.' }, { status: res.status });
+  }
+
+  return Response.json(await res.json());
+}
