@@ -1,8 +1,7 @@
 import { notFound } from 'next/navigation';
-import Link from 'next/link';
 import { getCurrentUser } from '@/lib/api/user';
 import { ProfileForm } from '@/components/users/ProfileForm';
-import { ArrowLeft, Sparkles } from 'lucide-react';
+import { Sparkles } from 'lucide-react';
 import { ReturnButton } from '../components/ReturnButton';
 
 export default async function ProfilePage() {
