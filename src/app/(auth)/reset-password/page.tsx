@@ -2,17 +2,28 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ShieldCheck, Lock, ArrowRight, Loader2, AlertCircle } from 'lucide-react';
+import {
+  resetPasswordFormSchema,
+  type ResetPasswordFormInput,
+} from '@/lib/validations/reset-password';
 
 export default function ResetPasswordPage() {
   const router = useRouter();
   const [resetToken, setResetToken] = useState<string | null>(null);
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [serverError, setServerError] = useState<string | null>(null);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<ResetPasswordFormInput>({
+    resolver: zodResolver(resetPasswordFormSchema),
+  });
 
   useEffect(() => {
     const token = sessionStorage.getItem('resetToken');
@@ -23,28 +34,18 @@ export default function ResetPasswordPage() {
     setResetToken(token);
   }, [router]);
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setError(null);
-
-    if (newPassword !== confirmPassword) {
-      setError('As senhas não coincidem.');
-      return;
-    }
-
-    setLoading(true);
+  async function onSubmit(data: ResetPasswordFormInput) {
+    setServerError(null);
 
     const res = await fetch('/api/auth/reset-password', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ resetToken, newPassword }),
+      body: JSON.stringify({ resetToken, newPassword: data.password }),
     });
 
-    setLoading(false);
-
     if (!res.ok) {
-      const data = await res.json().catch(() => ({}));
-      setError(data.error ?? 'Não foi possível redefinir a senha.');
+      const json = await res.json().catch(() => ({}));
+      setServerError(json.error ?? 'Não foi possível redefinir a senha.');
       return;
     }
 
@@ -70,27 +71,26 @@ export default function ResetPasswordPage() {
             <ShieldCheck className="h-8 w-8 text-white" />
           </div>
           <h1 className="mb-1 text-2xl font-bold text-white">Criar nova senha</h1>
-          <p className="text-sm text-zinc-400 text-center">
+          <p className="text-center text-sm text-zinc-400">
             Sua nova senha deve ser diferente da senha anterior
           </p>
         </div>
 
         {/* Card */}
         <div className="glass-strong animate-fade-in-up rounded-2xl p-7 delay-200">
-          <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+          <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5">
             <div className="flex flex-col gap-1.5">
               <label className="text-sm font-medium text-zinc-300">Nova senha</label>
               <div className="relative">
                 <Lock className="absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-zinc-500" />
                 <Input
+                  {...register('password')}
                   type="password"
-                  value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
                   placeholder="••••••••"
-                  required
                   className="h-12 rounded-xl border border-zinc-700/50 bg-zinc-800/60 pl-10 text-white transition-all duration-300 placeholder:text-zinc-500 focus-visible:border-indigo-500/50 focus-visible:ring-2 focus-visible:ring-indigo-500/50"
                 />
               </div>
+              {errors.password && <p className="text-xs text-red-400">{errors.password.message}</p>}
             </div>
 
             <div className="flex flex-col gap-1.5">
@@ -98,29 +98,30 @@ export default function ResetPasswordPage() {
               <div className="relative">
                 <Lock className="absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-zinc-500" />
                 <Input
+                  {...register('confirmPassword')}
                   type="password"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
                   placeholder="••••••••"
-                  required
                   className="h-12 rounded-xl border border-zinc-700/50 bg-zinc-800/60 pl-10 text-white transition-all duration-300 placeholder:text-zinc-500 focus-visible:border-indigo-500/50 focus-visible:ring-2 focus-visible:ring-indigo-500/50"
                 />
               </div>
+              {errors.confirmPassword && (
+                <p className="text-xs text-red-400">{errors.confirmPassword.message}</p>
+              )}
             </div>
 
-            {error && (
+            {serverError && (
               <div className="flex items-center gap-2 rounded-lg border border-red-500/20 bg-red-500/10 p-3 text-red-400">
                 <AlertCircle className="h-4 w-4 shrink-0" />
-                <p className="text-sm">{error}</p>
+                <p className="text-sm">{serverError}</p>
               </div>
             )}
 
             <Button
               type="submit"
-              disabled={loading}
+              disabled={isSubmitting}
               className="mt-1 flex h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-linear-to-r from-indigo-500 to-purple-600 text-sm font-semibold text-white shadow-lg shadow-indigo-500/25 transition-all duration-300 hover:scale-[1.01] hover:from-indigo-400 hover:to-purple-500 hover:shadow-indigo-500/40 active:scale-[0.99] disabled:opacity-60 disabled:hover:scale-100 disabled:hover:shadow-indigo-500/25"
             >
-              {loading ? (
+              {isSubmitting ? (
                 <>
                   <Loader2 className="h-4 w-4 animate-spin" />
                   Salvando...

@@ -3,32 +3,41 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { ChefHat, Mail, ArrowRight, Loader2, KeyRound, ArrowLeft } from 'lucide-react';
+import { Mail, ArrowRight, Loader2, KeyRound, ArrowLeft } from 'lucide-react';
+import {
+  forgotPasswordFormSchema,
+  type ForgotPasswordFormInput,
+} from '@/lib/validations/forgot-password';
 
 export default function ForgotPasswordPage() {
   const router = useRouter();
-  const [email, setEmail] = useState('');
-  const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setLoading(true);
+  const {
+    register,
+    handleSubmit,
+    getValues,
+    formState: { errors, isSubmitting },
+  } = useForm<ForgotPasswordFormInput>({
+    resolver: zodResolver(forgotPasswordFormSchema),
+  });
 
+  async function onSubmit(data: ForgotPasswordFormInput) {
     await fetch('/api/auth/forgot-password', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email }),
+      body: JSON.stringify({ email: data.email }),
     });
 
-    setLoading(false);
     setSent(true);
   }
 
   function handleContinue() {
-    router.push(`/verify-reset-code?email=${encodeURIComponent(email)}`);
+    router.push(`/verify-reset-code?email=${encodeURIComponent(getValues('email'))}`);
   }
 
   return (
@@ -73,28 +82,27 @@ export default function ForgotPasswordPage() {
               </Button>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+            <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5">
               <div className="flex flex-col gap-1.5">
                 <label className="text-sm font-medium text-zinc-300">E-mail</label>
                 <div className="relative">
                   <Mail className="absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-zinc-500" />
                   <Input
+                    {...register('email')}
                     placeholder="seu@email.com"
                     type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
                     className="h-12 rounded-xl border border-zinc-700/50 bg-zinc-800/60 pl-10 text-white transition-all duration-300 placeholder:text-zinc-500 focus-visible:border-indigo-500/50 focus-visible:ring-2 focus-visible:ring-indigo-500/50"
                   />
                 </div>
+                {errors.email && <p className="text-xs text-red-400">{errors.email.message}</p>}
               </div>
 
               <Button
                 type="submit"
-                disabled={loading}
+                disabled={isSubmitting}
                 className="mt-1 flex h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-linear-to-r from-indigo-500 to-purple-600 text-sm font-semibold text-white shadow-lg shadow-indigo-500/25 transition-all duration-300 hover:scale-[1.01] hover:from-indigo-400 hover:to-purple-500 hover:shadow-indigo-500/40 active:scale-[0.99] disabled:opacity-60 disabled:hover:scale-100 disabled:hover:shadow-indigo-500/25"
               >
-                {loading ? (
+                {isSubmitting ? (
                   <>
                     <Loader2 className="h-4 w-4 animate-spin" />
                     Enviando...
