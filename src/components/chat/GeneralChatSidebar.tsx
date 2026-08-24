@@ -28,7 +28,6 @@ export function GeneralChatSidebar({ initialMessages }: GeneralChatSidebarProps)
         {open ? <PanelRightClose className="h-4 w-4" /> : <PanelRightOpen className="h-4 w-4" />}
       </button>
 
-      {/* Sidebar panel — slides from right */}
       <div
         className="fixed top-0 right-0 z-20 hidden h-screen w-[680px] border-l border-zinc-700/40 bg-zinc-800/60 shadow-2xl shadow-black/30 backdrop-blur-md lg:flex"
         style={{
@@ -39,9 +38,6 @@ export function GeneralChatSidebar({ initialMessages }: GeneralChatSidebarProps)
         <GeneralChatPanel initialMessages={initialMessages} />
       </div>
 
-      {/* ── Mobile FAB + Drawer (<lg) ── */}
-
-      {/* FAB */}
       <button
         type="button"
         onClick={() => setMobileOpen(true)}
@@ -51,7 +47,6 @@ export function GeneralChatSidebar({ initialMessages }: GeneralChatSidebarProps)
         <MessageSquareText className="h-6 w-6" />
       </button>
 
-      {/* Backdrop */}
       {mobileOpen && (
         <div
           className="animate-fade-in fixed inset-0 z-50 bg-black/60 backdrop-blur-sm lg:hidden"
@@ -59,7 +54,6 @@ export function GeneralChatSidebar({ initialMessages }: GeneralChatSidebarProps)
         />
       )}
 
-      {/* Drawer */}
       <div
         className={`fixed inset-x-0 bottom-0 z-50 rounded-t-3xl border-t border-zinc-700/40 bg-zinc-900 transition-transform duration-500 ease-out lg:hidden ${mobileOpen ? 'translate-y-0' : 'translate-y-full'}`}
         style={{ height: '85dvh' }}

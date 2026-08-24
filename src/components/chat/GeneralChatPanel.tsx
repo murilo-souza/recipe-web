@@ -2,9 +2,20 @@
 
 import { useState, useRef, useEffect, useCallback } from 'react';
 import type { GeneralChatMessageResponse } from '@/lib/types/api';
-import { Bot, User, SendHorizonal, Loader2, MessageSquare, AlertCircle, Sparkles } from 'lucide-react';
+import {
+  Bot,
+  User,
+  SendHorizonal,
+  Loader2,
+  MessageSquare,
+  AlertCircle,
+  Sparkles,
+  Trash,
+} from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
+import { Button } from '../ui/button';
 
 interface GeneralChatPanelProps {
   initialMessages: GeneralChatMessageResponse[];
@@ -75,6 +86,17 @@ export function GeneralChatPanel({ initialMessages }: GeneralChatPanelProps) {
     setMessages((prev) => [...prev, aiMessage]);
   }
 
+  async function handleDeleteAll() {
+    if (sending) return;
+
+    try {
+      await fetch('/api/chat/general', { method: 'DELETE' });
+      setMessages([]);
+    } catch (error) {
+      setError('Não foi possível deletar as mensagens.');
+    }
+  }
+
   function handleKeyDown(e: React.KeyboardEvent) {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
@@ -83,32 +105,49 @@ export function GeneralChatPanel({ initialMessages }: GeneralChatPanelProps) {
   }
 
   return (
-    <div className="flex flex-col h-full w-full">
+    <div className="flex h-full w-full flex-col">
       {/* Header */}
-      <div className="px-5 pt-5 pb-3 border-b border-zinc-700/40 shrink-0">
+      <div className="flex shrink-0 items-center justify-between border-b border-zinc-700/40 px-6 pt-8 pb-4">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-purple-500/20 to-indigo-500/20 flex items-center justify-center border border-purple-500/20">
-            <Sparkles className="w-3.5 h-3.5 text-purple-400" />
+          <div className="flex h-8 w-8 items-center justify-center rounded-xl border border-purple-500/20 bg-gradient-to-br from-purple-500/20 to-indigo-500/20">
+            <Sparkles className="h-3.5 w-3.5 text-purple-400" />
           </div>
           <div>
-            <h2 className="text-white text-sm font-semibold">Assistente Geral</h2>
-            <p className="text-zinc-500 text-[11px]">Pergunte sobre todas as suas receitas</p>
+            <h2 className="text-sm font-semibold text-white">Assistente Geral</h2>
+            <p className="text-[11px] text-zinc-500">Pergunte sobre todas as suas receitas</p>
           </div>
         </div>
+        <Tooltip>
+          <TooltipTrigger
+            render={
+              <Button
+                type="button"
+                className="cursor-pointer hover:ring-1 hover:ring-purple-500/20"
+                onClick={handleDeleteAll}
+              >
+                <Trash className="h-4 w-4 text-red-400" />
+              </Button>
+            }
+          />
+
+          <TooltipContent>
+            <p>Deletar todas as mensagens</p>
+          </TooltipContent>
+        </Tooltip>
       </div>
 
       {/* Messages area */}
-      <div className="flex-1 overflow-y-auto px-4 py-4 space-y-3 min-h-0">
+      <div className="min-h-0 flex-1 space-y-3 overflow-y-auto px-4 py-4">
         {messages.length === 0 && (
-          <div className="flex flex-col items-center justify-center h-full py-10 animate-fade-in">
+          <div className="animate-fade-in flex h-full flex-col items-center justify-center py-10">
             <div className="relative mb-4">
-              <div className="absolute inset-0 bg-purple-500/10 rounded-full blur-2xl scale-150" />
-              <div className="relative w-14 h-14 rounded-2xl bg-zinc-700/40 border border-zinc-600/30 flex items-center justify-center">
-                <MessageSquare className="w-6 h-6 text-zinc-500" />
+              <div className="absolute inset-0 scale-150 rounded-full bg-purple-500/10 blur-2xl" />
+              <div className="relative flex h-14 w-14 items-center justify-center rounded-2xl border border-zinc-600/30 bg-zinc-700/40">
+                <MessageSquare className="h-6 w-6 text-zinc-500" />
               </div>
             </div>
-            <p className="text-zinc-400 text-sm font-medium mb-1">Nenhuma mensagem</p>
-            <p className="text-zinc-600 text-[11px] text-center max-w-[200px] leading-relaxed">
+            <p className="mb-1 text-sm font-medium text-zinc-400">Nenhuma mensagem</p>
+            <p className="max-w-[200px] text-center text-[11px] leading-relaxed text-zinc-600">
               Pergunte coisas como &quot;quais receitas doces eu tenho?&quot;
             </p>
           </div>
@@ -116,18 +155,25 @@ export function GeneralChatPanel({ initialMessages }: GeneralChatPanelProps) {
         {messages.map((message) => {
           const isUser = message.role === 'User';
           return (
-            <div key={message.id} className={`flex ${isUser ? 'justify-end' : 'justify-start'} animate-fade-in-up`}>
-              <div className={`flex items-end gap-2 max-w-[90%] ${isUser ? 'flex-row-reverse' : 'flex-row'}`}>
+            <div
+              key={message.id}
+              className={`flex ${isUser ? 'justify-end' : 'justify-start'} animate-fade-in-up`}
+            >
+              <div
+                className={`flex max-w-[90%] items-end gap-2 ${isUser ? 'flex-row-reverse' : 'flex-row'}`}
+              >
                 {/* Avatar */}
-                <div className={`w-6 h-6 rounded-md flex items-center justify-center shrink-0 ${
-                  isUser
-                    ? 'bg-indigo-500/20'
-                    : 'bg-gradient-to-br from-purple-500/20 to-indigo-500/20'
-                }`}>
+                <div
+                  className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-md ${
+                    isUser
+                      ? 'bg-indigo-500/20'
+                      : 'bg-gradient-to-br from-purple-500/20 to-indigo-500/20'
+                  }`}
+                >
                   {isUser ? (
-                    <User className="w-3 h-3 text-indigo-400" />
+                    <User className="h-3 w-3 text-indigo-400" />
                   ) : (
-                    <Bot className="w-3 h-3 text-purple-400" />
+                    <Bot className="h-3 w-3 text-purple-400" />
                   )}
                 </div>
 
@@ -135,8 +181,8 @@ export function GeneralChatPanel({ initialMessages }: GeneralChatPanelProps) {
                 <div
                   className={`rounded-2xl px-3.5 py-2.5 text-sm leading-relaxed ${
                     isUser
-                      ? 'bg-gradient-to-br from-indigo-500 to-indigo-600 text-white rounded-br-md shadow-md shadow-indigo-500/10'
-                      : 'bg-zinc-700/60 border border-zinc-600/30 text-zinc-200 rounded-bl-md'
+                      ? 'rounded-br-md bg-gradient-to-br from-indigo-500 to-indigo-600 text-white shadow-md shadow-indigo-500/10'
+                      : 'rounded-bl-md border border-zinc-600/30 bg-zinc-700/60 text-zinc-200'
                   }`}
                 >
                   <div className="prose-sm prose-invert max-w-none">
@@ -150,15 +196,24 @@ export function GeneralChatPanel({ initialMessages }: GeneralChatPanelProps) {
 
         {/* Typing indicator */}
         {sending && (
-          <div className="flex items-end gap-2 animate-fade-in">
-            <div className="w-6 h-6 rounded-md bg-gradient-to-br from-purple-500/20 to-indigo-500/20 flex items-center justify-center shrink-0">
-              <Bot className="w-3 h-3 text-purple-400" />
+          <div className="animate-fade-in flex items-end gap-2">
+            <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-gradient-to-br from-purple-500/20 to-indigo-500/20">
+              <Bot className="h-3 w-3 text-purple-400" />
             </div>
-            <div className="rounded-2xl rounded-bl-md bg-zinc-700/60 border border-zinc-600/30 px-3.5 py-2.5">
+            <div className="rounded-2xl rounded-bl-md border border-zinc-600/30 bg-zinc-700/60 px-3.5 py-2.5">
               <div className="flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-zinc-400 animate-bounce" style={{ animationDelay: '0ms' }} />
-                <span className="w-1.5 h-1.5 rounded-full bg-zinc-400 animate-bounce" style={{ animationDelay: '150ms' }} />
-                <span className="w-1.5 h-1.5 rounded-full bg-zinc-400 animate-bounce" style={{ animationDelay: '300ms' }} />
+                <span
+                  className="h-1.5 w-1.5 animate-bounce rounded-full bg-zinc-400"
+                  style={{ animationDelay: '0ms' }}
+                />
+                <span
+                  className="h-1.5 w-1.5 animate-bounce rounded-full bg-zinc-400"
+                  style={{ animationDelay: '150ms' }}
+                />
+                <span
+                  className="h-1.5 w-1.5 animate-bounce rounded-full bg-zinc-400"
+                  style={{ animationDelay: '300ms' }}
+                />
               </div>
             </div>
           </div>
@@ -167,16 +222,14 @@ export function GeneralChatPanel({ initialMessages }: GeneralChatPanelProps) {
       </div>
 
       {/* Input area */}
-      <div className="px-4 py-3 border-t border-zinc-700/40 shrink-0">
+      <div className="shrink-0 border-t border-zinc-700/40 px-4 py-3">
         {error && (
-          <div className="flex items-center gap-2 mb-2 px-3 py-2 rounded-lg bg-red-500/10 border border-red-500/20">
-            <AlertCircle className="w-3 h-3 text-red-400 shrink-0" />
-            <p className="text-red-400 text-[11px]">{error}</p>
+          <div className="mb-2 flex items-center gap-2 rounded-lg border border-red-500/20 bg-red-500/10 px-3 py-2">
+            <AlertCircle className="h-3 w-3 shrink-0 text-red-400" />
+            <p className="text-[11px] text-red-400">{error}</p>
           </div>
         )}
-        <div className="relative flex items-end gap-2 rounded-xl bg-zinc-800/60 border border-zinc-700/50 
-                        focus-within:ring-2 focus-within:ring-indigo-500/50 focus-within:border-indigo-500/50 
-                        transition-all duration-300 px-3 py-2">
+        <div className="relative flex items-end gap-2 rounded-xl border border-zinc-700/50 bg-zinc-800/60 px-3 py-2 transition-all duration-300 focus-within:border-indigo-500/50 focus-within:ring-2 focus-within:ring-indigo-500/50">
           <textarea
             ref={textareaRef}
             value={draft}
@@ -185,30 +238,25 @@ export function GeneralChatPanel({ initialMessages }: GeneralChatPanelProps) {
             disabled={sending}
             placeholder="Pergunte sobre suas receitas..."
             rows={1}
-            className="flex-1 bg-transparent text-sm text-white placeholder:text-zinc-500 outline-none resize-none 
-                       disabled:opacity-50 py-1 leading-relaxed"
+            className="flex-1 resize-none bg-transparent py-1 text-sm leading-relaxed text-white outline-none placeholder:text-zinc-500 disabled:opacity-50"
             style={{ maxHeight: `${MAX_TEXTAREA_HEIGHT}px` }}
           />
           <button
             type="button"
             onClick={handleSend}
             disabled={sending || !draft.trim()}
-            className="shrink-0 w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 
-                       flex items-center justify-center text-white mb-px
-                       shadow-md shadow-indigo-500/15 hover:shadow-indigo-500/30 
-                       hover:from-indigo-400 hover:to-purple-500
-                       disabled:opacity-30 disabled:hover:shadow-indigo-500/15 disabled:hover:from-indigo-500 disabled:hover:to-purple-600
-                       transition-all duration-300 cursor-pointer"
+            className="mb-px flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 text-white shadow-md shadow-indigo-500/15 transition-all duration-300 hover:from-indigo-400 hover:to-purple-500 hover:shadow-indigo-500/30 disabled:opacity-30 disabled:hover:from-indigo-500 disabled:hover:to-purple-600 disabled:hover:shadow-indigo-500/15"
           >
             {sending ? (
-              <Loader2 className="w-3.5 h-3.5 animate-spin" />
+              <Loader2 className="h-3.5 w-3.5 animate-spin" />
             ) : (
-              <SendHorizonal className="w-3.5 h-3.5" />
+              <SendHorizonal className="h-3.5 w-3.5" />
             )}
           </button>
         </div>
-        <p className="text-zinc-600 text-[9px] mt-1 px-1">
-          <kbd className="text-zinc-500 font-mono">Enter</kbd> enviar · <kbd className="text-zinc-500 font-mono">Shift+Enter</kbd> nova linha
+        <p className="mt-1 px-1 text-[9px] text-zinc-600">
+          <kbd className="font-mono text-zinc-500">Enter</kbd> enviar ·{' '}
+          <kbd className="font-mono text-zinc-500">Shift+Enter</kbd> nova linha
         </p>
       </div>
     </div>

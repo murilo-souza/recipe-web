@@ -128,7 +128,6 @@ export default async function HomePage() {
         </section>
       </div>
 
-      {/* General Chat Sidebar — collapsible on desktop, drawer on mobile */}
       <GeneralChatSidebar initialMessages={chatMessages} />
     </div>
   );
