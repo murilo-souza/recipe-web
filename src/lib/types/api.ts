@@ -92,3 +92,10 @@ export interface UserResponse {
   email: string;
   profileImage: string | null;
 }
+
+export interface GeneralChatMessageResponse {
+  id: number;
+  role: string;
+  content: string;
+  createdAt: string;
+}

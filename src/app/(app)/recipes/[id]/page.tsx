@@ -47,10 +47,8 @@ export default async function RecipeDetailPage({ params }: PageProps) {
             </div>
           </div>
 
-          {/* Image (if exists) */}
           {recipe.image && (
             <div className="animate-fade-in-up overflow-hidden rounded-2xl border border-zinc-700/50 delay-100">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={recipe.image}
                 alt={recipe.title}
@@ -59,7 +57,6 @@ export default async function RecipeDetailPage({ params }: PageProps) {
             </div>
           )}
 
-          {/* Description card */}
           <DetailCard
             icon={<FileText className="h-4 w-4 text-indigo-400" />}
             label="Descrição"
@@ -68,7 +65,6 @@ export default async function RecipeDetailPage({ params }: PageProps) {
             <p className="text-sm leading-relaxed text-zinc-300">{recipe.description}</p>
           </DetailCard>
 
-          {/* Ingredients card */}
           <DetailCard
             icon={<UtensilsCrossed className="h-4 w-4 text-emerald-400" />}
             label="Ingredientes"
@@ -87,7 +83,6 @@ export default async function RecipeDetailPage({ params }: PageProps) {
             </ul>
           </DetailCard>
 
-          {/* Steps card */}
           <DetailCard
             icon={<ListOrdered className="h-4 w-4 text-purple-400" />}
             label="Modo de Preparo"
