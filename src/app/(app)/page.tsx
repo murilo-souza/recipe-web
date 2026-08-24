@@ -5,9 +5,15 @@ import Link from 'next/link';
 import { Plus, ChefHat, Sparkles, User } from 'lucide-react';
 import { LogoutButton } from '@/components/auth/LogoutButton';
 import { getCurrentUser } from '@/lib/api/user';
+import { getGeneralChatHistory } from '@/lib/api/generalChat';
+import { GeneralChatSidebar } from '@/components/chat/GeneralChatSidebar';
 
 export default async function HomePage() {
-  const [recipes, user] = await Promise.all([getAllRecipes(), getCurrentUser()]);
+  const [recipes, user, chatMessages] = await Promise.all([
+    getAllRecipes(),
+    getCurrentUser(),
+    getGeneralChatHistory(),
+  ]);
 
   // Greeting based on time of day
   const hour = new Date().getHours();
@@ -121,6 +127,9 @@ export default async function HomePage() {
           <RecipeGrid recipes={recipes} />
         </section>
       </div>
+
+      {/* General Chat Sidebar — collapsible on desktop, drawer on mobile */}
+      <GeneralChatSidebar initialMessages={chatMessages} />
     </div>
   );
 }
