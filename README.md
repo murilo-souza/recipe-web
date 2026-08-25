@@ -1,135 +1,167 @@
-# RecipeApp Web
+# RecipeApp API
 
-Frontend do RecipeApp: aplicação Next.js para gerenciar receitas, com autenticação (e-mail/senha + Google), edição/criação de receitas com imagens, e um chat com IA especializado em cada receita.
+Backend do RecipeApp: uma API REST em .NET 10 para gerenciamento de receitas, com autenticação JWT (email/senha + Google OAuth), chat com IA sobre cada receita (Gemini) e um **assistente agentic** que usa RAG e MCP para responder perguntas sobre toda a coleção de receitas do usuário.
 
-Consome a [RecipeApp API](../recipe-api) através de um padrão **BFF (Backend for Frontend)**, sem expor tokens ao cliente.
+Projeto pessoal construído como vitrine de arquitetura — Clean Architecture, múltiplos serviços deployados de forma independente, e integração de IA com busca semântica e chamada de ferramentas.
 
 ## Stack
 
-- **Next.js 16** (App Router) + **React 19**
-- **TypeScript**
-- **pnpm** como gerenciador de pacotes
-- **Tailwind CSS v4** + **shadcn/ui** (Radix + Base UI por baixo)
-- **React Hook Form** + **Zod** para formulários e validação
-- **react-markdown** para renderizar as respostas do chat
-- **next-cloudinary** para exibição de imagens
-- **@react-oauth/google** para login social
-- Deploy: **Vercel**
+- **.NET 10** / ASP.NET Core Web API
+- **PostgreSQL** com **Entity Framework Core** (Npgsql) e **pgvector** para busca vetorial
+- **JWT Bearer** para autenticação + refresh token via cookie HttpOnly
+- **Google Auth** (validação de ID Token) para login social
+- **Gemini** (`gemini-3.5-flash-lite` para chat, `gemini-embedding-001` para embeddings) via chamadas HTTP diretas à Generative Language API
+- **Model Context Protocol** (SDK oficial C#) para o servidor de ferramentas agentic
+- **Cloudinary** para hospedagem de imagens (receitas e fotos de perfil, incluindo re-hospedagem de fotos de perfil do Google)
+- **Resend** para envio de e-mails (fluxo de reset de senha)
+- **Swagger** para documentação interativa da API
+- Deploy: **Render** (dois Web Services independentes, via Docker)
 
 ## Arquitetura
 
-### Padrão BFF (Backend for Frontend)
-
-O frontend nunca fala diretamente com a API .NET a partir do browser. Todo o tráfego passa pelas **Route Handlers** do Next.js (`src/app/api/**`), que atuam como um proxy autenticado:
+O projeto é dividido em **cinco projetos** na mesma solution, dois deles publicados como serviços independentes:
 
 ```
-Browser  →  Next.js Route Handlers (BFF)  →  RecipeApp API (.NET)
-             (src/app/api/**)
+RecipeApp.slnx
+├── RecipeApp.Domain          # Entidades puras, sem dependência de framework
+├── RecipeApp.Application     # Regras de negócio: Services, DTOs, interfaces (contratos)
+├── RecipeApp.Infrastructure  # Implementações concretas: EF Core, repositórios, integrações externas
+├── RecipeApp.Api             # Serviço 1 — Controllers REST, autenticação, Swagger
+└── RecipeApp.McpServer       # Serviço 2 — servidor MCP com as ferramentas de busca
 ```
 
-Por quê: o **access token JWT** e o **refresh token** ficam guardados em um cookie `HttpOnly` no lado do servidor Next.js (`src/lib/session.ts`), nunca acessíveis via JavaScript no browser. Isso reduz a superfície de ataque para XSS — mesmo que um script malicioso rode na página, não consegue ler os tokens.
+**Fluxo de dependência (Clean Architecture):** `Api`/`McpServer` → `Application` → `Domain`, com `Infrastructure` implementando as interfaces definidas em `Application`. O `Domain` não depende de nenhuma outra camada — a regra é garantida pelo compilador via `ProjectReference`, não só por convenção.
 
-Fluxo de uma requisição autenticada:
+Cada módulo de negócio (Auth, Recipes, Users, Categories, ChatMessages) segue o mesmo padrão dentro de `Application`/`Infrastructure`: `Service` (regra de negócio) + `Interface` (contrato) + `Repository` (persistência) + `DTOs`.
 
-1. Uma Server Component ou Server Action chama `apiFetch()` (`src/lib/api/server.ts`)
-2. `apiFetch` lê o cookie de sessão, extrai o `accessToken` e injeta o header `Authorization: Bearer`
-3. A chamada vai direto para a API .NET (`process.env.API_URL`)
+### Arquitetura Agentic (RAG + MCP)
 
-### Refresh automático de token
-
-O arquivo `src/proxy.ts` roda como middleware em toda navegação (exceto rotas de auth e assets estáticos). Ele:
-
-1. Decodifica o `accessToken` do cookie e checa o `exp`
-2. Se estiver a menos de 1 minuto de expirar, chama `/api/auth/refresh` na API .NET
-3. Atualiza o cookie de sessão com o novo par de tokens
-4. Se o refresh falhar, redireciona para `/login`
-
-### Estrutura de pastas
+O diferencial do projeto está no **chat geral** (`/api/chat/general`), que não responde só com contexto fixo — ele decide dinamicamente **como** buscar a informação:
 
 ```
-src/
-├── app/
-│   ├── (app)/              # Rotas autenticadas: home, perfil, receitas (view/edit/new)
-│   ├── (auth)/              # Rotas públicas: login, registro, reset de senha
-│   └── api/                 # BFF — Route Handlers que fazem proxy para a API .NET
-│       ├── auth/             # login, register, google, logout, forgot/reset-password
-│       ├── recipes/          # CRUD de receitas + mensagens do chat
-│       └── users/
-├── components/
-│   ├── auth/                # Componentes de autenticação
-│   ├── chat/                # Chat da receita (bubble, panel, drawer mobile)
-│   ├── recipes/              # Form, card, grid, inputs dinâmicos de receita
-│   └── ui/                   # Componentes shadcn/ui (button, dialog, form, etc.)
-├── lib/
-│   ├── api/                  # Clients de API: server.ts (BFF→API) e chamadas por recurso
-│   ├── validations/           # Schemas Zod por formulário
-│   ├── session.ts             # Leitura/escrita do cookie de sessão HttpOnly
-│   └── utils.ts
-└── proxy.ts                  # Middleware de refresh automático de token
+Usuário → RecipeApp.Api (client MCP) ⇄ Gemini (decide qual ferramenta chamar, se alguma)
+                    ↓
+          RecipeApp.McpServer (tools) → PostgreSQL (pgvector + SQL exato)
 ```
 
-Os grupos de rota `(app)` e `(auth)` isolam layout e proteção de acesso: `(app)` assume usuário autenticado, `(auth)` é o fluxo público de entrada.
+O `RecipeApp.McpServer` é um servidor MCP standalone, com deploy próprio, que expõe duas ferramentas com propósitos distintos:
+
+| Ferramenta | Técnica | Quando é usada |
+|---|---|---|
+| `search_recipes_semantic` | Busca vetorial (pgvector + cosine distance, com threshold calibrado) | Perguntas fuzzy, tipo "algo leve e rápido" ou "receitas com sabor picante" |
+| `search_recipes_excluding_ingredient` | Filtro SQL exato (com suporte a categoria e exclusão de ingrediente) | Perguntas objetivas, tipo "quais receitas não têm queijo" ou "quantas receitas de sobremesa eu tenho" |
+
+O `RecipeApp.Api` atua como **client MCP**: a cada mensagem do chat geral, ele declara as ferramentas disponíveis ao Gemini e deixa o modelo decidir se responde direto ou se precisa consultar dados reais. A implementação suporta múltiplos ciclos de chamada de ferramenta em sequência (loop agentic) antes de formular a resposta final — não é um fluxo fixo de "uma pergunta, uma busca".
+
+**Por que dois serviços separados, no mesmo repositório:** o MCP server roda como processo e deploy independentes (comunicação via HTTP real, protocolo MCP completo), mas compartilha `Domain`/`Infrastructure` com a API principal via referência de projeto — evitando duplicar entidades e configuração de banco entre dois repositórios.
+
+O chat **por receita** (`/api/recipes/{id}/messages`) é mais simples por design: injeta o contexto da receita diretamente no prompt, sem passar por ferramentas — usado quando a pergunta já tem escopo definido (uma receita específica).
 
 ## Rodando localmente
 
 ### Pré-requisitos
 
-- Node.js (versão compatível com Next.js 16)
-- **pnpm** (`packageManager: pnpm@11.5.3` no `package.json`)
-- A [API](../recipe-api) rodando localmente ou uma URL de API acessível
+- .NET 10 SDK
+- PostgreSQL com a extensão `pgvector` disponível (ex: [Neon](https://neon.tech), que já vem com suporte nativo)
 
 ### Setup
 
 ```bash
-pnpm install
-pnpm dev
+# Restaurar dependências
+dotnet restore RecipeApp.slnx
+
+# Aplicar migrations (cria as tabelas e ativa a extensão vector)
+dotnet ef database update --project RecipeApp.Infrastructure --startup-project RecipeApp.Api
+
+# Rodar a API
+dotnet run --project RecipeApp.Api
+
+# Em outro terminal, rodar o servidor MCP (necessário para o chat geral funcionar)
+dotnet run --project RecipeApp.McpServer
 ```
 
-Aplicação disponível em `http://localhost:3000`.
+A API sobe com Swagger disponível em `/swagger` (ambiente Development). O servidor MCP não tem UI — pode ser testado isoladamente com o [MCP Inspector](https://github.com/modelcontextprotocol/inspector).
 
-### Variáveis de ambiente
+### Configuração (User Secrets)
 
-Criar um `.env.local` na raiz com:
+O projeto usa **User Secrets** em desenvolvimento (não há segredos versionados nos `appsettings.json`).
+
+**`RecipeApp.Api`:**
 
 ```bash
-API_URL=http://localhost:5000        # URL da RecipeApp API
-NEXT_PUBLIC_GOOGLE_CLIENT_ID=...      # Client ID do Google OAuth (mesmo usado na API)
-NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=... # Cloud name do Cloudinary, para exibição de imagens
+cd RecipeApp.Api
+dotnet user-secrets set "ConnectionStrings:DefaultConnection" "Host=localhost;Database=recipeapp;Username=postgres;Password=..."
+dotnet user-secrets set "Jwt:Secret" "..."
+dotnet user-secrets set "Jwt:Issuer" "..."
+dotnet user-secrets set "Jwt:Audience" "..."
+dotnet user-secrets set "Jwt:AccessTokenMinutes" "15"
+dotnet user-secrets set "Jwt:RefreshTokenDays" "30"
+dotnet user-secrets set "Google:ClientId" "..."
+dotnet user-secrets set "Gemini:ApiKey" "..."
+dotnet user-secrets set "Cloudinary:CloudName" "..."
+dotnet user-secrets set "Cloudinary:ApiKey" "..."
+dotnet user-secrets set "Cloudinary:ApiSecret" "..."
+dotnet user-secrets set "Resend:ApiKey" "..."
+dotnet user-secrets set "Mcp:ServerUrl" "http://localhost:5100"
 ```
 
-> `API_URL` é usada apenas server-side (Route Handlers e Server Components) — nunca é exposta ao browser, reforçando o padrão BFF.
+**`RecipeApp.McpServer`** (usa apenas o essencial — sem auth, e-mail ou imagem):
 
-### Scripts disponíveis
+```bash
+cd RecipeApp.McpServer
+dotnet user-secrets set "ConnectionStrings:DefaultConnection" "Host=localhost;Database=recipeapp;Username=postgres;Password=..."
+dotnet user-secrets set "Gemini:ApiKey" "..."
+```
 
-| Comando | Descrição |
-|---|---|
-| `pnpm dev` | Sobe o servidor de desenvolvimento |
-| `pnpm build` | Build de produção |
-| `pnpm start` | Sobe o build de produção |
-| `pnpm lint` / `pnpm lint:fix` | ESLint |
-| `pnpm format` / `pnpm format:check` | Prettier |
+Em produção (Render), essas mesmas chaves são configuradas como variáveis de ambiente, uma para cada Web Service.
+
+### Migrations
+
+Ao alterar entidades em `RecipeApp.Domain`, gerar uma nova migration com:
+
+```bash
+dotnet ef migrations add NomeDaMigration --project RecipeApp.Infrastructure --startup-project RecipeApp.Api
+```
+
+## Autenticação
+
+- Login por e-mail/senha ou Google OAuth (`AuthController`)
+- **Access token** (JWT, curta duração) retornado no corpo da resposta
+- **Refresh token** (longa duração) setado como cookie HttpOnly — nunca exposto ao JS do cliente
+- Fluxo de recuperação de senha por código numérico enviado via e-mail (Resend), com token intermediário de curta duração autorizando a troca de senha
+
+## Endpoints
+
+| Recurso | Rota base | Principais ações |
+|---|---|---|
+| Auth | `/api/auth` | `register`, `login`, `google`, `refresh`, `logout`, `forgot-password`, `verify-reset-code`, `reset-password` |
+| Receitas | `/api/recipes` | `GET`, `GET /{id}`, `POST /create`, `PUT /{id}`, `DELETE /{id}` |
+| Categorias | `/api/categories` | `GET` |
+| Usuário | `/api/users` | `GET /me`, `PUT /me` |
+| Chat da receita | `/api/recipes/{recipeId}/messages` | `GET`, `POST`, `DELETE` |
+| Chat geral (agentic) | `/api/chat/general` | `GET`, `POST`, `DELETE` |
+
+Documentação completa e testável em `/swagger` com a API rodando localmente.
 
 ## Deploy
 
-Aplicação publicada na **Vercel**, configurada para chamar a API hospedada no Render via `API_URL`. Um header `Cross-Origin-Opener-Policy: same-origin-allow-popups` é aplicado globalmente (`next.config.ts`) para permitir o popup de login do Google funcionar corretamente.
+- **`RecipeApp.Api`** e **`RecipeApp.McpServer`** rodam como dois Web Services independentes no **Render**, cada um com seu próprio `Dockerfile` e ciclo de deploy.
+- O CORS na API principal está configurado para aceitar requisições do domínio do frontend (Vercel), com `AllowCredentials` habilitado.
+- **Nota sobre free tier**: ambos os serviços "dormem" após inatividade — a primeira requisição depois de um período ocioso pode levar de 30 a 60 segundos para responder (cold start), potencialmente em cascata se os dois estiverem inativos ao mesmo tempo.
 
 ## TODO
 
-Roadmap do projeto (compartilhado com o backend):
-
-- [ ] 2FA
-- [ ] Busca de receitas
+- [ ] 2FA (a infraestrutura de código temporário + hash + expiração já existe, reaproveitada do fluxo de reset de senha)
+- [ ] Busca de receitas por texto simples (fora do chat)
 - [ ] Compartilhar receita via PDF
-- [ ] Compartilhar receita via app
-- [ ] Chat geral (não vinculado a uma receita específica)
-- [ ] **RAG** — busca semântica sobre as receitas
-- [ ] **MCP** — servidor MCP expondo:
-  - [ ] tool para criar receita
-  - [ ] tool para buscar receita por ingrediente
+- [ ] Compartilhar receita via link/app
+- [ ] Tool MCP adicional: criar receita diretamente pelo chat
 
 ## Decisões de arquitetura
 
-- **BFF em vez de chamada direta à API**: mantém tokens fora do alcance do JavaScript do cliente (cookie HttpOnly) e evita expor a URL/estrutura da API .NET diretamente ao browser.
-- **Refresh de token via middleware** (`proxy.ts`) em vez de lógica no client: centraliza a renovação em um único ponto, sem precisar de interceptors espalhados pelas chamadas do frontend.
-- **App Router + Server Components** para os dados que não mudam a cada interação, com Route Handlers isolando toda a lógica de rede sensível (tokens, headers de auth).
-- **shadcn/ui**: componentes copiados para o repo (não uma dependência de UI fechada), permitindo customização total mantendo acessibilidade via Radix/Base UI.
+- **Clean Architecture** para manter regras de negócio isoladas de detalhes de infraestrutura (banco, providers externos), facilitando testes e troca de tecnologia em qualquer camada externa.
+- **MCP server como serviço separado, não embutido na API**: mesmo tendo hoje um único consumidor (a própria API), rodar como processo/deploy independente significa implementar o protocolo real (descoberta de tools, chamada remota via HTTP) em vez de simular tool calling localmente — e deixa a porta aberta para outros clientes MCP se conectarem no futuro, sem reescrever nada.
+- **pgvector em vez de um vector DB dedicado**: para o volume de dados do projeto, Postgres com pgvector é o padrão recomendado atualmente e evita operar um serviço a mais só para embeddings.
+- **Duas ferramentas MCP com propósitos deliberadamente diferentes** (busca semântica vs. filtro SQL exato): reflete a limitação real de embeddings para perguntas de correspondência exata (negação, contagem, filtro categórico) — cada ferramenta é usada onde é comprovadamente mais confiável.
+- **JWT + Refresh Token via cookie HttpOnly**: o access token curto reduz a janela de exposição em caso de vazamento; o refresh token fica inacessível a scripts no browser, mitigando XSS.
+- **User Secrets** em vez de segredos no `appsettings.json`, evitando credenciais versionadas no repositório.
