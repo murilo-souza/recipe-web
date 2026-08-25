@@ -2,7 +2,7 @@
 
 Frontend do RecipeApp: aplicação Next.js para gerenciar receitas, com autenticação (e-mail/senha + Google), edição/criação de receitas com imagens, chat com IA especializado em cada receita, e um **assistente agentic geral** que responde perguntas sobre toda a coleção de receitas do usuário.
 
-Consome a [RecipeApp API](../recipe-api) através de um padrão **BFF (Backend for Frontend)**, sem expor tokens ao cliente.
+Consome a [RecipeApp API](https://github.com/murilo-souza/recipe-api) através de um padrão **BFF (Backend for Frontend)**, sem expor tokens ao cliente.
 
 ## Stack
 
@@ -49,7 +49,7 @@ O arquivo `src/proxy.ts` roda em toda navegação (exceto rotas de auth e assets
 O projeto tem dois tipos de chat, propositalmente implementados de forma diferente:
 
 - **Chat por receita** (`/recipes/[id]`) — contexto fixo: a receita atual é injetada diretamente no prompt enviado à API. Simples e previsível, porque o escopo da pergunta já é conhecido.
-- **Chat geral** (`/chat`) — sem escopo fixo. Cada mensagem é processada pela API como um agente: o Gemini decide se responde direto ou se precisa consultar as receitas do usuário via um servidor MCP (busca semântica ou filtro exato), podendo encadear múltiplas consultas antes de responder. Ver detalhes da arquitetura agentic no [README da API](../recipe-api#arquitetura-agentic-rag--mcp).
+- **Chat geral** (`/chat`) — sem escopo fixo. Cada mensagem é processada pela API como um agente: o Gemini decide se responde direto ou se precisa consultar as receitas do usuário via um servidor MCP (busca semântica ou filtro exato), podendo encadear múltiplas consultas antes de responder. Ver detalhes da arquitetura agentic no [README da API](https://github.com/murilo-souza/recipe-api/blob/main/README.md).
 
 ### Estrutura de pastas
 
@@ -84,7 +84,7 @@ Os grupos de rota `(app)` e `(auth)` isolam layout e proteção de acesso: `(app
 
 - Node.js (versão compatível com Next.js 16)
 - **pnpm** (`packageManager: pnpm@11.5.3` no `package.json`)
-- A [API](../recipe-api) e o MCP Server rodando localmente (o MCP Server só é necessário para o chat geral funcionar)
+- A [API](https://github.com/murilo-souza/recipe-api) e o MCP Server rodando localmente (o MCP Server só é necessário para o chat geral funcionar)
 
 ### Setup
 
