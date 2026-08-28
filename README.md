@@ -122,14 +122,6 @@ NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET=... # Upload preset unsigned do Cloudinary
 
 Aplicação publicada na **Vercel**, configurada para chamar a API hospedada no Render via `API_URL`. Um header `Cross-Origin-Opener-Policy: same-origin-allow-popups` é aplicado globalmente (`next.config.ts`) para permitir o popup de login do Google funcionar corretamente.
 
-## TODO
-
-- [ ] 2FA
-- [ ] Busca de receitas por texto simples
-- [ ] Compartilhar receita via PDF
-- [ ] Compartilhar receita via link/app
-- [ ] Ajustes de responsividade mobile nas telas de criação/edição
-
 ## Decisões de arquitetura
 
 - **BFF em vez de chamada direta à API**: mantém tokens fora do alcance do JavaScript do cliente (cookie HttpOnly) e evita expor a URL/estrutura da API .NET diretamente ao browser.
