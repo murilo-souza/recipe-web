@@ -56,22 +56,24 @@ O projeto tem dois tipos de chat, propositalmente implementados de forma diferen
 ```
 src/
 ├── app/
-│   ├── (app)/                # Rotas autenticadas: home, perfil, receitas (view/edit/new), chat geral
+│   ├── (app)/                 # Rotas autenticadas: home, perfil, receitas (view/edit/new), chat geral
 │   ├── (auth)/                # Rotas públicas: login, registro, reset de senha
 │   └── api/                   # BFF — Route Handlers que fazem proxy para a API .NET
-│       ├── auth/                # login, register, google, logout, forgot/reset-password
-│       ├── recipes/             # CRUD de receitas + mensagens do chat por receita
-│       ├── chat/general/        # chat geral (agentic)
+│       ├── auth/              # login, register, google, logout, forgot/reset-password
+│       ├── recipes/           # CRUD de receitas + mensagens do chat por receita
+│       ├── chat/general/      # chat geral (agentic)
 │       └── users/
 ├── components/
 │   ├── auth/                  # Componentes de autenticação
 │   ├── chat/                  # Chat por receita e chat geral (bubble, panel)
-│   ├── recipes/                # Form, card, grid, inputs dinâmicos de receita
-│   └── ui/                     # Componentes shadcn/ui (button, dialog, form, etc.)
+│   ├── recipes/               # Form, card, grid, inputs dinâmicos de receita
+│   ├── users/                 # Form, inputs dinâmicos de edição dos usuários
+│   └── ui/                    # Componentes shadcn/ui (button, dialog, form, etc.)
 ├── lib/
 │   ├── api/                    # Clients de API: server.ts (BFF→API) e chamadas por recurso
-│   ├── validations/             # Schemas Zod por formulário
-│   ├── session.ts               # Leitura/escrita do cookie de sessão HttpOnly
+│   ├── types/                  # Tipagem de responses e requests
+│   ├── validations/            # Schemas Zod por formulário
+│   ├── session.ts              # Leitura/escrita do cookie de sessão HttpOnly
 │   └── utils.ts
 └── proxy.ts                    # Middleware de refresh automático de token
 ```
