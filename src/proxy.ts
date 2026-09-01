@@ -3,6 +3,7 @@ import { getTokenExpiry } from '@/lib/session';
 
 const SESSION_COOKIE = 'session';
 const REFRESH_MARGIN_MS = 60 * 1000; // renova 1 minuto antes de vencer
+const REFRESH_TIMEOUT_MS = 55 * 1000; // dá tempo do cold start do Render completar
 
 export async function proxy(req: NextRequest) {
   const sessionCookie = req.cookies.get(SESSION_COOKIE);
@@ -21,17 +22,32 @@ export async function proxy(req: NextRequest) {
 
   if (!isExpiringSoon) return NextResponse.next();
 
-  const refreshRes = await fetch(`${process.env.API_URL}/api/auth/refresh`, {
-    method: 'POST',
-    headers: {
-      Cookie: `refreshToken=${session.refreshToken}`,
-    },
-  });
+  let refreshRes: Response;
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), REFRESH_TIMEOUT_MS);
 
-  if (!refreshRes.ok) {
+    refreshRes = await fetch(`${process.env.API_URL}/api/auth/refresh`, {
+      method: 'POST',
+      headers: {
+        Cookie: `refreshToken=${session.refreshToken}`,
+      },
+      signal: controller.signal,
+    });
+
+    clearTimeout(timeoutId);
+  } catch {
+    return NextResponse.next();
+  }
+
+  if (refreshRes.status === 401) {
     const response = NextResponse.redirect(new URL('/login', req.url));
     response.cookies.delete(SESSION_COOKIE);
     return response;
+  }
+
+  if (!refreshRes.ok) {
+    return NextResponse.next();
   }
 
   const data = await refreshRes.json();
