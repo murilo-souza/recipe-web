@@ -131,3 +131,10 @@ Aplicação publicada na **Vercel**, configurada para chamar a API hospedada no 
 - **App Router + Server Components** para os dados que não mudam a cada interação, com Route Handlers isolando toda a lógica de rede sensível (tokens, headers de auth).
 - **Chat por receita e chat geral com implementações deliberadamente diferentes**: injeção direta de contexto é suficiente (e mais barata) quando o escopo já é conhecido; o padrão agentic só se justifica quando a pergunta pode abranger toda a coleção de receitas.
 - **shadcn/ui**: componentes copiados para o repo (não uma dependência de UI fechada), permitindo customização total mantendo acessibilidade via Radix/Base UI.
+
+## Imagens da aplicação
+<img width="686" height="942" alt="chat_fuzzy_quest" src="https://github.com/user-attachments/assets/81053661-904b-4a4b-8aef-d1e61e7c76b8" />
+<img width="686" height="945" alt="chat_exact_quest" src="https://github.com/user-attachments/assets/16976473-c810-494c-a49c-411f58e02971" />
+<img width="1604" height="941" alt="homr_with-chat" src="https://github.com/user-attachments/assets/8ba15da8-5a29-4b14-b814-832486c6a4df" />
+<img width="1276" height="940" alt="home" src="https://github.com/user-attachments/assets/02bb9c88-cf54-464f-9894-49ba84a2d63b" />
+
