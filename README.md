@@ -56,22 +56,24 @@ O projeto tem dois tipos de chat, propositalmente implementados de forma diferen
 ```
 src/
 ├── app/
-│   ├── (app)/                # Rotas autenticadas: home, perfil, receitas (view/edit/new), chat geral
+│   ├── (app)/                 # Rotas autenticadas: home, perfil, receitas (view/edit/new), chat geral
 │   ├── (auth)/                # Rotas públicas: login, registro, reset de senha
 │   └── api/                   # BFF — Route Handlers que fazem proxy para a API .NET
-│       ├── auth/                # login, register, google, logout, forgot/reset-password
-│       ├── recipes/             # CRUD de receitas + mensagens do chat por receita
-│       ├── chat/general/        # chat geral (agentic)
+│       ├── auth/              # login, register, google, logout, forgot/reset-password
+│       ├── recipes/           # CRUD de receitas + mensagens do chat por receita
+│       ├── chat/general/      # chat geral (agentic)
 │       └── users/
 ├── components/
 │   ├── auth/                  # Componentes de autenticação
 │   ├── chat/                  # Chat por receita e chat geral (bubble, panel)
-│   ├── recipes/                # Form, card, grid, inputs dinâmicos de receita
-│   └── ui/                     # Componentes shadcn/ui (button, dialog, form, etc.)
+│   ├── recipes/               # Form, card, grid, inputs dinâmicos de receita
+│   ├── users/                 # Form, inputs dinâmicos de edição dos usuários
+│   └── ui/                    # Componentes shadcn/ui (button, dialog, form, etc.)
 ├── lib/
 │   ├── api/                    # Clients de API: server.ts (BFF→API) e chamadas por recurso
-│   ├── validations/             # Schemas Zod por formulário
-│   ├── session.ts               # Leitura/escrita do cookie de sessão HttpOnly
+│   ├── types/                  # Tipagem de responses e requests
+│   ├── validations/            # Schemas Zod por formulário
+│   ├── session.ts              # Leitura/escrita do cookie de sessão HttpOnly
 │   └── utils.ts
 └── proxy.ts                    # Middleware de refresh automático de token
 ```
@@ -122,14 +124,6 @@ NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET=... # Upload preset unsigned do Cloudinary
 
 Aplicação publicada na **Vercel**, configurada para chamar a API hospedada no Render via `API_URL`. Um header `Cross-Origin-Opener-Policy: same-origin-allow-popups` é aplicado globalmente (`next.config.ts`) para permitir o popup de login do Google funcionar corretamente.
 
-## TODO
-
-- [ ] 2FA
-- [ ] Busca de receitas por texto simples
-- [ ] Compartilhar receita via PDF
-- [ ] Compartilhar receita via link/app
-- [ ] Ajustes de responsividade mobile nas telas de criação/edição
-
 ## Decisões de arquitetura
 
 - **BFF em vez de chamada direta à API**: mantém tokens fora do alcance do JavaScript do cliente (cookie HttpOnly) e evita expor a URL/estrutura da API .NET diretamente ao browser.
@@ -137,3 +131,10 @@ Aplicação publicada na **Vercel**, configurada para chamar a API hospedada no 
 - **App Router + Server Components** para os dados que não mudam a cada interação, com Route Handlers isolando toda a lógica de rede sensível (tokens, headers de auth).
 - **Chat por receita e chat geral com implementações deliberadamente diferentes**: injeção direta de contexto é suficiente (e mais barata) quando o escopo já é conhecido; o padrão agentic só se justifica quando a pergunta pode abranger toda a coleção de receitas.
 - **shadcn/ui**: componentes copiados para o repo (não uma dependência de UI fechada), permitindo customização total mantendo acessibilidade via Radix/Base UI.
+
+## Imagens da aplicação
+<img width="686" height="942" alt="chat_fuzzy_quest" src="https://github.com/user-attachments/assets/81053661-904b-4a4b-8aef-d1e61e7c76b8" />
+<img width="686" height="945" alt="chat_exact_quest" src="https://github.com/user-attachments/assets/16976473-c810-494c-a49c-411f58e02971" />
+<img width="1604" height="941" alt="homr_with-chat" src="https://github.com/user-attachments/assets/8ba15da8-5a29-4b14-b814-832486c6a4df" />
+<img width="1276" height="940" alt="home" src="https://github.com/user-attachments/assets/02bb9c88-cf54-464f-9894-49ba84a2d63b" />
+
