@@ -2,7 +2,7 @@ import { NextResponse, type NextRequest } from 'next/server';
 import { getTokenExpiry } from '@/lib/session';
 
 const SESSION_COOKIE = 'session';
-const REFRESH_MARGIN_MS = 60 * 1000; // renova 1 minuto antes de vencer
+const REFRESH_MARGIN_MS = 60 * 1000;
 const REFRESH_TIMEOUT_MS = 55 * 1000; // dá tempo do cold start do Render completar
 
 export async function proxy(req: NextRequest) {
